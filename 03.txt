@@ -1,0 +1,369 @@
+application uh layout or UI
+okay so I'm going to grab this and
+within layout yeah we're going to
+replace all of this and it's a big chunk
+of HTML so that's okay we'll go over uh
+anything that's important and we'll
+probably delete a bunch of this as well
+all right so let's go back to the
+browser give it a refresh and what's
+going on here well we've pulled in uh
+this Tailwind component and notice all
+of these utility classes but we haven't
+actually pulled in the Tailwind CSS uh
+framework so you can attach this to your
+build tool of choice if you know what
+that is but otherwise while we're still
+in the in the playing Phase the toying
+phase I'm just going to reference it on
+a CDN and I can do that I believe I have
+a shortcut for that yeah I can do that
+by creating a script and setting the
+source to cd. tailwind
+css.com and that should do the trick so
+if I come back and give it a refresh
+Tada it works pretty cool all right so
+now I want to take two minutes and just
+quickly delete anything uh that we're
+not going to use like these menu bars
+and such all right so your profile I'm
+going to search for
+that and yes notice uh for anything that
+requires a bit of interactivity in
+JavaScript they will include notes for
+what classes you should uh toggle in our
+case though it's not going to be
+relevant because we won't have any drop-
+down
+menu all right so what you see here is
+the user's profile all right give that a
+refresh and now it's gone but notice
+there will be mobile styling as well so
+we should get rid of that uh as well all
+right here's the mobile
+version come back give it a refresh and
+now that's gone good all right what else
+uh we don't have five links we only have
+um three so we have one for home one for
+about and one for contact and then I
+will update these
+links cool
+and there should be let's see yeah this
+is the mobile specific version so if I
+come back and refresh we've updated it
+here but notice for desktop view uh we
+haven't so I'm going to look for
+dashboard one more time aha here we go
+let's update these as
+well home about
+contact all
+right come back give it a refresh that
+looks good to me next we have our
+heading here so it's set to default and
+if I scroll down
+here uh there we are and then notice it
+says your content here so example
+content goes here or the slotted content
+right and we learned about that in the
+last episode there you go so this would
+be the main content area uh for each
+individual page so let's see can we just
+swap that out with slot all right let's
+give it a shot so we come back give it a
+refresh and now notice a quick note it's
+going to appear as if we're on the
+homepage because those CSS styles are
+hardcoded on that home link but we will
+make that Dynamic shortly uh anyways
+right now we're clearly on the contact
+page as you can see here and then we're
+on the about page and then we're on the
+homepage okay but what about the heading
+here and this is where it gets a little
+bit tricky we've learned about setting a
+default slot here but now we've learned
+there's a section outside of that that
+also needs to be dynamic based upon the
+current page uh and there's a couple
+ways we can do this but one way that I
+like to is to Simply assume this is a
+variable do you want it to be heading
+title anything you want let's call it
+heading okay but now if I come back and
+give it a refresh it's going to blow up
+because well now it's looking for a
+heading variable that has not been
+defined so that's proper behavior okay
+so how do we Define that well if I come
+back to the
+homepage um there's there's two options
+here we could pass it through as a prop
+and a prop is just kind of a custom
+attribute like this heading or we can
+declare a named slots so think of your
+slots as different areas where you paste
+content and you could have a slot here a
+slot there and a slot down here right
+but you need a way to distinguish
+between them so we assign names this is
+your your dashboard slot this is your
+main slot this is your footer slot right
+so if we know that this represents our
+default slot at the very top let's
+create a new one for our heading slot
+and we do that by writing x-s slot colon
+and then in this case the name of the
+slot or the variable so we have heading
+here and I can say home
+page all right come back give it a
+refresh and it works very cool so yeah
+this is one way that we can solve that
+problem and I think it's probably going
+to be the path of least resistance um
+like I said we could talk more about
+props but I don't want to get too into
+the weeds when it comes to components
+because we have many other things to
+talk about first all right so let's go
+to the about page and update this one as
+well like so contact and again this can
+be anything uh you want we're just using
+a basic uh string for now so home about
+contact I think we're in business all
+right so now the last little fun thing I
+want to do is swap out some of these
+images uh instead of the Tailwind UI
+logo why don't we use of course the
+layer cast logo and I will paste that in
+right here yeah layer cast.com images
+logo logo triangle or use your own logo
+come back give it a refresh that looks
+nice and then finally this guy this ta
+one UI guy I'm always
+seeing uh let's come down where are you
+buddy right here let's swap that out
+with our mascot Larry the robot so I
+will paste that in and once again lc.com
+images lar aif face
+and nope there's two versions of this
+dude where's the other one here we go
+here's the other one like that so come
+back give it a refresh and I like it
+okay and then finally I think this
+dude's name is Tom Cook why don't we
+change his name to Larry robot and we'll
+do just me Jeffrey lc.com all right give
+it a refresh come down and now we see
+Larry robot all of this is looking good
+especially when considering we spent
+maybe 10 minutes or so on this okay so
+now in the next episode I'm on the
+contact page but the home button is
+highlighted which clearly is not
+correct so we'll have to figure out how
+to conditionally uh create layout or
+apply styling based upon what the
+current URL is or what the current route
+is so yeah I'll show you how to do that
+in day five no homework today I think
+you've done enough uh and I'll see you
+later bye
+[Music]
+welcome back everybody to day five do I
+re-record that I'm going to keep it
+welcome everyone to day five um today we
+are focused on these navigation links we
+need to figure out how we can apply
+custom styling based upon what the
+current routes and you'll learn about
+that shortly uh or what current URL is
+let's get
+going all right so for a visual yeah
+notice how the active navigation styling
+is hardcoded to the homepage even though
+I click on these so we got to fix it so
+why don't we start within our layout
+file and actually real quick notice how
+Tailwind has given us a little bit of
+feedback that we need to uh set the
+height to 100% on both the HTML and body
+tags we missed that in the last episode
+so let's do that now height full um and
+then a background of a light gray then
+we also have to set height full to the
+body all right so now if I come back and
+give this a refresh uh you'll see a gray
+background here but also um you can't
+tell but the height of the container is
+now the the full height as you would
+expect all right cool so anyways I want
+to go down to our navigation links right
+here home about and contact and of
+course that translates to what you see
+here and yeah again not notice how the
+first page has the active link styling
+which is a background of this gray 900
+uh and generally with Tailwind 100 level
+100 will be the lightest version and 900
+will be the
+darkest um so if it is active it looks
+like we want white text and a dark gray
+color for the background and that's what
+we've done here uh otherwise it should
+have a lighter gray color and white text
+when you hover over it which is what we
+have here all right so here's what we
+can do we'll run a conditional to
+determine whether or not the current
+page is the homepage in this case and
+for this anchor tag is the current page
+about and for this one is the current
+page contact and if that is truy or true
+and I'm going to hardcode it just
+temporarily in that case we want these
+stylings that Tailwind has recommended
+so I will paste that in here otherwise
+and I'm just using the chary operator
+here otherwise we want these so I will
+grab that and paste it in okay so now I
+can remove all of that and here's what
+we get all right so let's get rid of
+this and yeah because we've hardcoded
+true it's going to be the active styling
+right and we see no change but if I
+change this to false and come back of
+course the styling updates all right
+very good and actually let's switch over
+to the homepage okay so now the only
+remaining step is of course to
+substitute this with the real method
+call so as it turns out laravel out of
+the box includes a request helper
+function uh you can call it to grab
+information about the current request
+now one of these methods on the object
+is called is and this allows us to pass
+a Rego expression a pattern and it will
+determine whether the current page
+matches that pattern so I could say if
+the request is the homepage then apply
+active styling come back refresh and it
+works but notice now when I switch to
+the about page it's no longer
+highlighted and that's what we want all
+right cool so now let's do this let's
+come back and I'm going to select all of
+that and paste it in here and then
+another one for this link okay all right
+next I can get rid of all of this
+because it's now included as part of the
+conditional like so now I can update
+this if the request is about if the
+request is contact and I think that
+should do the trick Let's cross our
+fingers give it a refresh and now we
+have about page contact page home page P
+everything is working just like we want
+and that's great okay so now remember a
+couple episodes ago how I noted that
+yeah a real life navigation link starts
+to get a little bit messy once you um
+change styling based upon the screen
+width or you have conditionals to
+determine uh special active or selected
+uh styling so with that in mind why
+don't we reintroduce that naving
+component and uh see what it looks like
+all right so I'm going to come back to
+components I'll create a brand new one
+here called nav link. blade.
+PHP all right I'll switch back select
+the whole thing and some of this should
+be a recap because we've already done
+this once so yeah as we discussed last
+time we don't want to hardcode the HF we
+should pass that in un let's hide the
+sidebar all right so now all of these
+will change to uh xnav link
+components and then all of this class
+junk including area current and we'll
+update that shortly as well uh can go
+away so I'll do this one as
+well and this
+one okay let's go back into our
+component clean this up just a little
+bit all right let's tackle uh this one
+ARA current um if you're just playing
+around feel free to delete it but if
+you're building a production app and you
+want it uh to be as accessible as
+possible this is for screen writers and
+it's a way to indicate if the current
+link um represents the current page in a
+list of pages uh if instead it was set
+to false that means it is not uh the
+current page so yeah once again we could
+do a check so I could just grab uh let's
+just grab this whole thing paste it in
+and then instead of using CSS classes I
+could set the value to page uh if it is
+true or false if it is not true all
+right that looks good next uh home yeah
+of course I'm just removing any
+hardcoded values so this can be our
+default slot and that means right here
+home will be effectively pasted there
+about for this one and contact for that
+one next the current URI um there's a
+number of ways we could handle this of
+course we could inspect the href but
+another way I want to show you is to
+introduce a prop that indicates whether
+this nav link should be marked as the
+active nav link and actually real quick
+let's go over that so within blade
+components you will hear about
+attributes and then props so attributes
+represent HTML attributes the H rev the
+ID the class anything uh a prop would be
+anything that is not an attribute and we
+we basically distinguish between them
+because you have to know well should
+that prop be included as one of the
+attributes that we Echo as part of the
+anchor tag well no right so if you have
+a prop called active and you Echo it out
+as part of the attributes now you have
+an anchor tag with an attribute name of
+active and that doesn't make sense so we
+have to distinguish between the two and
+here's how we do that at the top of my
+blade component I'm going to use a blade
+directive you'll know blade directives
+because they begin with an ad symbol and
+notice how my editor um autocompletes
+all of the available options here and
+there's countless ones again don't feel
+overwhelmed you will use a fraction of
+these but you have um directives like if
+or unless or for each or dump to quickly
+dump something to the screen uh think of
+them as little bits of shorthand or
+sugar that ultimately compile down to
+vanilla PHP um Echo statements or
+function calls so in our case we want a
+new prop so we can declare our props as
+an array and we've decided we want a
+prop called active Okay so I'm going to
+show you how this works and this will
+really help I think we're going to spit
+out all of the attributes that might be
+potentially in uh as a naving so for
+example in this one I'll set ID equals
+something here just so we can see it in
+effect all right let's come back to the
+browser give it a refresh and then
+inspect this all right and notice it
+does include the href and the ID and it
+does that because we spit out or echoed
+all of the attributes here so if I
