@@ -1,0 +1,372 @@
+let's go into home snatch our four each
+and paste it into
+jobs all right and then finally let's
+update uh the about page to point to
+jobs like so all right refresh and now
+we have a homepage and a brand new jobs
+page that lists all of the jobs that are
+currently available for your business or
+whatever very cool so I want to finish
+up though by making each of these
+clickable and when I click on it it
+should take me to a dedicated job
+listing page so hm how are we going to
+do this well let's go back to jobs and
+yeah H let's do this we're going to have
+a list item and of course this should be
+wrapped if you omit the UL the browser
+will create it for you yeah just a
+decent practice is to include it um so
+now we know these are all going to be
+anchor tags so I will wrap them like so
+and this is going to take us to to a new
+route why don't we say jobs slash and
+then maybe some kind of identifier or a
+slug that represents each individual job
+that we're offering so let's add an
+identifier like ID we're going to keep
+it really simple ID is one for this one
+ID is two for that one and ID is three
+for this one so now we have one key that
+is unique and will always be unique that
+represents this individual item okay so
+now if we switch back to our job
+listings page think about it if I said
+job one we now have a hook of sorts that
+will say all right fetch me the job that
+has an ID of one if I did job3 we know
+find me the job that has an ID of three
+we have a way to do that okay but now
+how do we create the route for this
+because really we need a route that says
+listen for job slash and then some kind
+of value it could be anything it could
+be dynamic so how do we do that well I'm
+going to go back to my routes file here
+I'm going to create a brand new route
+and why don't we reuse this one here to
+save some time listen for jobs slash and
+then could be one could be two could be
+three could be 10,000 right so why don't
+we instead represent this with um I
+don't know like a ID or we could even
+call it job what job do you want but
+yeah I'm going to call it ID just for
+now so here's the cool thing about larl
+laravel will automatically detect that
+this is wrapped in braces and it knows
+oh this is a wild card so I'm going to
+I'm going to grab that I'm going to
+contain it and then I will pass it to
+this function so that you can use it
+however you want I'll show you let's
+call it ID and then I'm going to dump an
+ID and actually instead of dump I'm
+going to switch over to a DD function
+which means dump and die so dump the ID
+and then kill the execution because all
+I care about right now is just quick
+seeing what is the value of this
+variable so as it turns out this dump
+function and the DD function you are
+going to love I promise okay so let's
+switch back example. test
+job1 and we get one if I do three then
+we get three so yeah notice it's a wild
+card and larl took care of all the work
+of grabbing it isolating it and passing
+it to our our closure here or the call
+back function which is so cool isn't it
+okay so now think about it I'm going to
+duplicate this jobs uh listing but again
+we could extract it and later we're
+going to do that there a bunch of
+duplicated jobs isn't a great idea but
+yeah what I could do is have our list of
+jobs here and then all we have to do is
+say well give me the job where the ID
+equals the one that you passed in so why
+don't we say job equals and do you know
+how to do this well you could do there's
+a number of ways to do it you could do a
+for each Loop over each of the items and
+then manually check is the ID of that
+item equal to um the ID that we're
+trying to reference if so that's the one
+you want uh but as it turns out you're
+using a framework so you should leverage
+the framework uh I will teach you about
+collections later in this series but for
+now it would be helpful to know that
+laravel includes an ARR class and that
+stands for array of course and this
+gives you access to countless methods as
+you can see here to interact with arrays
+so if I want to find the first item
+within an array that matches some kind
+of criteria I could use the first
+function I give it our array and then I
+provide a function and this function
+will be called for each item within the
+array and it will receive the current uh
+item so in this case it's going to Loop
+over the jobs and for each item it will
+pass that into your function so job
+would be equal to this on the first
+iteration then this one then this one
+you get it okay so now this should
+return a Boolean that indicates is this
+the one you mean is this the first one
+you're trying to find so in our case
+we're going to say return job ID equals
+the ID that was passed in but as you may
+know um because we're in a closure here
+I don't have access to the ID here so
+you have two ways to solve this one with
+traditional PHP you would add use use
+the ID make that available here and that
+would do the trick another option is to
+instead use a short function that was
+only recently introduced as part of PHP
+8. x one of them so that would take the
+form of this FN accept your job then use
+an arrow and then do once again job ID
+equals ID but notice we don't run into
+that problem where we have to add use
+and that's because of the scoping here
+and this will do the exact same thing
+and generally if you can use a short
+closure here for things like this I
+would recommend it it um if it's new to
+you and it feels weird Everything feels
+weird at the beginning stick with it and
+then you don't think about it ever again
+all right but do whatever one you feel
+most comfortable with right now that's
+most important and that'll give us our
+job okay so now let's leverage our dump
+or our DD function to just do a sanity
+check did that work all right let's come
+back to the browser all right refresh uh
+we are on job3 and sure enough it found
+that item let's go to job SL2 if on that
+item job SL1 very cool but now what if
+it's job
+sl5 we get null so right now we have to
+be aware of that the user might request
+a job that does not exist and we have to
+figure out what to do in that situation
+okay but happy path first so now I'm
+going to return
+job and I will uh pass through our job
+to the view finally right here we can
+use the fully qualified class path but
+instead I'm going to import it so you
+can do it manually or use whatever
+shortcuts your editor provides in PHP
+storm I can press option return and do
+cleanup code and now notice it
+automatically Imports that at the top
+okay so are we on the same page we have
+a new route to show a job uh right now
+we're just duplicating the list of jobs
+but we'll fix that uh soon I promise and
+then we search for the job that has the
+matching ID uh that's uh included as
+part of the URI once it finds it and
+this is Happy path so we assume that
+we're going to find it we load a view
+all right let's go into our view now and
+and it looks like we don't have one yet
+so I will copy jobs paste it and call
+this one job. blade.
+PHP and then down here um yeah maybe
+whatever you want we could have an H2
+this would be job title and then uh we
+don't have much else we could do a
+salary uh this job
+pays job salary per
+year and that's good enough for a little
+demo here uh real quick let's add a
+couple classes here these are Tailwind
+classes uh text large you can leave it
+blank if you want but yeah we're just
+making the font Bold and the text
+slightly large easy enough for me all
+right back to the browser and there we
+go here's our director position what do
+we have here job with an idea of one
+here's number two for a programmer three
+for a teacher it all works so now think
+about it all you have to do is link to
+that specific page within your job
+listings view so right here let's make
+it Dynamic job
+ID let's see if it works so here's our
+jobs page um we don't have any styling
+yet but notice they are clickable so
+here's our director position let's go
+back here's our programmer position and
+here is our teacher position so yeah the
+last thing I'm going to do is just add I
+don't know text blue hover underline for
+each of these just to make it not great
+but just to make it a little more clear
+that these are clickable links H maybe I
+should be a teacher all right this job
+pays $40,000 here's all the details
+here's a form um I can fill out to learn
+more we are well on our way to creating
+a job board all right so yeah we're not
+actually going to build the real jobs
+board uh platform until the end of the
+course when you feel quite a bit more
+but yeah throughout the series you're
+going to see little nuggets little
+traces of of Concepts that we might use
+once we start building that thing
+officially so you're doing great work uh
+this video went a little long so no
+homework today I will see you in day
+seven
+[Music]
+bye okay welcome to day seven so I'm
+going to Dive Right In because we have a
+bunch to do here I'm going to start
+within my routes file and yeah you'll
+remember in the last episode uh
+temporarily we duplicated the list of
+jobs so I defined the array here and
+then we did a copy paste down here as
+well but yeah clearly um that doesn't
+scale at all so we need to solve this
+problem but H I'm going to solve this
+problem in a very incremental way and
+I'm going to do it uh in this way
+because I think it will help you better
+understand some of the concepts that we
+will discuss in the next episode so just
+bear with me and come along for the ride
+okay so if we're thinking incrementally
+well the first thing we could do is just
+push the array up one level so I could
+select our list of jobs here cut it and
+then push it up one level which in this
+case is just the routes file so I could
+have a list of jobs like so and then if
+we scroll down we could use those jobs
+so make that variable available within
+this closure here and then I can pass it
+in okay then I can do the exact same
+thing here so get rid of
+it and then once again make that
+variable available in this function and
+yeah we have now removed that
+duplication back to the browser click a
+link and yeah everything works exactly
+in the way it did before which is great
+all right let's keep going uh next I'm
+going to wrap this within sort of a data
+container so let's create a class called
+job and I wanted def find a method that
+will fetch all of my jobs and I just
+said the word all let's make that the
+method name so I have a method called
+all and I'm going to make it static
+that's fine for now and we will select
+all of these right here this whole array
+and bring it in like so all right and
+then of course I don't need to define
+the variable here okay so yeah it's just
+a container uh at this point if I call
+job all that's going to return this
+array to me okay so now we can scroll
+down we will no longer need ed jobs so I
+can get rid of that because now we have
+a class and I can replace the variable
+names here and I'll select both of these
+with our job class colon all all right
+makes sense we now have a class with a
+method called all that returns an array
+and let's make That explicit by adding a
+return type we can do that by adding a
+colon and then the type of the data that
+we're returning in this case an array so
+we're just being explicit about what
+type of data is being uh returned from
+this method okay so let's go back to the
+browser once again give it a try and
+everything works just as it did before
+cool all right let's keep going does it
+make sense to have a class name job
+inside of our routes file no it's not
+really where it goes so why don't we
+instead place this within our app
+directory but where do we put it well I
+think we're going to use the models
+directory here
+okay now let's take 30 seconds to
+quickly go over this because I think
+it's important and by the way that's why
+I'm doing a side camera view it's that
+important to listen up open your ears
+okay uh model is a key term and it comes
+from the MVC architecture MVC stands for
+model view controller uh and it's not
+unique to layl lots and lots of tools
+and Frameworks uh adhere to it uh it's
+just a system it's a methodology for how
+to go about constructing applications
+and how each piece of the puzzle should
+and can communicate with each other so
+model view controller
+MVC and as it turns out you've already
+learned about views right it's the
+presentation layer controllers we're
+going to talk about more but what we're
+doing in that routes file where we
+Define a route and then we have a
+function that handles that route that's
+your controller basically but we'll get
+into that more in a couple episodes so
+that leaves model now I'm going to keep
+it very basic
+your model can represent uh your data
+persistence but also the business logic
+tier of your application so think about
+it if you were building a jobs board
+platform the concept of a job is really
+important and it would have all of this
+Behavior associated with it right uh
+what are what are the rules for creating
+a job um Can jobs be marked as open or
+available or filled uh what happens when
+a job is filled you know there are all
+of these questions that you have to ask
+whenever you build an application and
+then that doesn't even account for how
+do you store these jobs do you write
+them to a file are they being placed in
+a database how do we remove a job how do
+we archive a job how do we delete a job
+all of this stuff uh can be encapsulated
+under this umbrella of model so H if we
+have a model's directory and we have
+this job class well maybe the job class
+should go in the models directory so
+let's do that now
+if I open up models you'll see we
+already have a user class and we will
+learn about that more a little later so
+let's create a class here and I'll call
+it job and you'll see my editor
+populates the class but I'm going to
+remove that so that I can copy over the
+one that we've already created so I grab
+that and move it over okay now if I
+scroll up real quick I want you to
+notice that we have a namespace of app
+models and notice how that correlates to
+the directory structure Here app models
+okay so I'm going to assume that you
+understand what a nam space is but if

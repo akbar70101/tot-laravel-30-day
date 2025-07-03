@@ -1873,6 +1873,9 @@ models and notice how that correlates to
 the directory structure Here app models
 okay so I'm going to assume that you
 understand what a nam space is but if
+
+375///////////////////////////////////part05-end
+
 not the 5-second explanation is it's a
 way to organize your code right as you
 can imagine the class name job is not
