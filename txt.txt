@@ -374,7 +374,7 @@ library or a framework like
 larl I don't know no matter how much
 experience I have I always turn back
 
-///////////////////////////part01-end
+375///////////////////////////part01-end
 
 into that absolute beginner who just
 wants to learn how to make a a simple
@@ -752,7 +752,7 @@ just going to grab the free code here
 and I can click on it and that will give
 us what you see right here a quick
 
-////////////////////////////part02-end
+375////////////////////////////part02-end
 
 application uh layout or UI
 okay so I'm going to grab this and
@@ -1123,6 +1123,9 @@ inspect this all right and notice it
 does include the href and the ID and it
 does that because we spit out or echoed
 all of the attributes here so if I
+
+375////////////////////////////////part03-end
+
 remove that and give it a refresh of
 course we're not going to see them okay
 so yeah what about this active prop well
@@ -1495,6 +1498,9 @@ hardcoding but of course you know in
 real life that will probably be fetched
 from a database and we'll talk about
 that in an episode or two all right so
+
+375///////////////////////////////////part04-end
+
 let's go into home snatch our four each
 and paste it into
 jobs all right and then finally let's

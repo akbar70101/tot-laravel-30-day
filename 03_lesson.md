@@ -1,317 +1,414 @@
-با کمال میل و افتخار. به عنوان یک معمار ارشد نرم‌افزار و مدرس با سابقه، باعث خرسندی من است که دانش و تجربیاتم را برای تدوین یک هندبوک برنامه‌نویسی در سطح جهانی، منطبق با استانداردهای برترین شرکت‌های فناوری، در اختیار شما قرار دهم.
+# جزوه آموزشی حرفه‌ای Laravel: کامپوننت‌های Blade و مدیریت Layout
 
-این جزوه بر اساس تحلیل دقیق و کلمه به کلمه متون آموزشی ارائه شده توسط شما تهیه شده است تا یک راهنمای جامع، عمیق و در عین حال ساده و کاربردی باشد. هدف ما تنها انتقال مفاهیم نیست، بلکه پرورش یک تفکر مهندسی استاندارد و حرفه‌ای است.
-
-با هم این مسیر را آغاز می‌کنیم.
-
-***
-
-### **درختواره ساختاری مباحث (Structural Tree)**
-
-در این جلسه، ما بر روی دو محور اصلی تمرکز خواهیم کرد: تکمیل و داینامیک‌سازی رابط کاربری (UI) و سپس بازسازی (Refactoring) کدهای خود برای دستیابی به ساختاری تمیزتر و حرفه‌ای‌تر.
+## 🗺️ نقشه ساختار درختی مباحث
 
 ```
-1. آماده‌سازی و استایل‌دهی اولیه Layout
-   ├─ 1.1. یکپارچه‌سازی فریم‌ورک Tailwind CSS از طریق CDN
-   └─ 1.2. رفع نیازمندی‌های اولیه CSS (تنظیم ارتفاع و پس‌زمینه)
-
-2. داینامیک کردن محتوای صفحات با Blade
-   ├─ 2.1. استفاده از اسلات پیش‌فرض (Default Slot) برای محتوای اصلی
-   └─ 2.2. معرفی اسلات‌های نام‌گذاری شده (Named Slots) برای بخش‌های داینامیک مانند عنوان صفحه (Heading)
-
-3. مدیریت هوشمند لینک‌های ناوبری (Navigation)
-   ├─ 3.1. مسئله: استایل ثابت (Hardcoded) برای لینک فعال
-   ├─ 3.2. راه‌حل اول: استایل‌دهی شرطی (Conditional Styling)
-   │    ├─ 3.2.1. استفاده از اپراتور سه‌تایی (Ternary Operator) در PHP
-   │    └─ 3.2.2. تشخیص مسیر فعلی با تابع کمکی request()->is()
-   └─ 3.3. راه‌حل دوم (حرفه‌ای): بازسازی کد به یک کامپوننت Blade مجزا
-        ├─ 3.3.1. ساخت کامپوننت NavLink.blade.php
-        ├─ 3.3.2. درک تفاوت Props و Attributes در کامپوننت‌ها
-        ├─ 3.3.3. تعریف Props با دایرکتیو @props
-        └─ 3.3.4. مدیریت دسترسی‌پذیری (Accessibility) با aria-current
+Laravel Blade Components & Layout Management
+├── 1. تنظیم Layout با Tailwind CSS
+│   ├── ایجاد Layout Component
+│   ├── اتصال Tailwind CSS
+│   └── پیکربندی HTML Structure
+├── 2. مفهوم Slots در Blade
+│   ├── Default Slot
+│   ├── Named Slots
+│   └── تفاوت Props و Attributes
+├── 3. مدیریت Navigation
+│   ├── ایجاد Navigation Links
+│   ├── Active State Management
+│   └── Laravel Request Helper
+├── 4. ایجاد کامپوننت‌های قابل استفاده مجدد
+│   ├── NavLink Component
+│   ├── Props Declaration
+│   └── Conditional Rendering
+└── 5. بهینه‌سازی و Best Practices
+    ├── Accessibility Features
+    ├── Component Organization
+    └── Responsive Design
 ```
 
 ---
 
-### **بخش ۱: آماده‌سازی و استایل‌دهی اولیه Layout**
+## 1️⃣ تنظیم Layout با Tailwind CSS
 
-در این بخش، ما ظاهر اولیه برنامه خود را با استفاده از فریم‌ورک محبوب Tailwind CSS شکل می‌دهیم و تنظیمات اولیه مورد نیاز آن را اعمال می‌کنیم.
+### 🔤 فلوی گرامری:
+1. ایجاد فایل Layout Component در مسیر `resources/views/components/`
+2. تعریف ساختار HTML پایه با استفاده از Tailwind Classes
+3. اتصال Tailwind CSS از طریق CDN
+4. پیکربندی Height و Background برای HTML/Body
 
-#### **۱.۱. یکپارچه‌سازی فریم‌ورک Tailwind CSS از طریق CDN**
+### 📝 قطعه کد آموزشی:
 
-**فلوی گرامری (Grammar Flow):**
-
-1.  برای استفاده سریع از Tailwind CSS بدون نیاز به ابزارهای ساخت (Build Tools)، ما آن را از طریق یک شبکه توزیع محتوا (CDN) به پروژه اضافه می‌کنیم.
-2.  در فایل layout اصلی، درون تگ `<head>`، یک تگ `<script>` اضافه می‌کنیم.
-3.  اتریبیوت `src` این تگ را برابر با آدرس CDN مربوط به Tailwind CSS قرار می‌دهیم.
-
-**کد نمونه:**
-
-```html:views/components/layout.blade.php
+```html
+<!-- resources/views/components/layout.blade.php -->
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-gray-100">
+<html class="h-full bg-gray-50">
 <head>
     <meta charset="UTF-8">
-    <title>My App</title>
-    {{-- اضافه کردن Tailwind CSS از طریق CDN --}}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laravel App</title>
+    <!-- اتصال Tailwind CSS از CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="h-full">
-    {{-- ... بقیه محتوای layout --}}
+    <!-- Navigation Header -->
+    <nav class="bg-gray-800">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <!-- Navigation Content -->
+            <div class="flex h-16 items-center justify-between">
+                <!-- نمایش محتوای Navigation -->
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Main Content Area -->
+    <main>
+        <!-- محل قرارگیری محتوای صفحه -->
+        {{ $slot }}
+    </main>
 </body>
 </html>
 ```
 
-**فلوی معنایی (Semantic Flow):**
+### 🔍 فلوی معنایی و خروجی:
+1. **HTML Structure**: ایجاد ساختار پایه صفحه با Navigation و Main Content
+2. **Tailwind Classes**: استفاده از کلاس‌های `h-full` برای تنظیم ارتفاع کامل
+3. **Background**: تنظیم رنگ پس‌زمینه با `bg-gray-50`
+4. **خروجی**: صفحه‌ای با Navigation بالا و محتوای اصلی در پایین
 
-1.  مرورگر هنگام خواندن فایل HTML، به تگ `<script>` می‌رسد.
-2.  درخواست برای دریافت فایل جاوااسکریپت موجود در آدرس `src` به سرور CDN ارسال می‌شود.
-3.  این فایل جاوااسکریپت، به صورت پویا تمام کلاس‌های کاربردی (Utility Classes) فریم‌ورک Tailwind را بر اساس کلاس‌هایی که شما در HTML خود استفاده کرده‌اید، تولید و به صفحه تزریق می‌کند.
-4.  در نتیجه، صفحه‌ای که قبلاً بدون استایل بود، اکنون با استایل‌های مدرن Tailwind نمایش داده می‌شود.
+### ⚙️ نکات فنی کلیدی:
+1. **CDN Usage**: استفاده از CDN فقط برای مراحل توسعه، در production از build tools استفاده کنید
+2. **Responsive Classes**: `sm:px-6 lg:px-8` برای پاسخگویی در اندازه‌های مختلف
+3. **Container Max Width**: `max-w-7xl` برای محدود کردن عرض محتوا
+4. **Height Management**: `h-full` روی html و body برای تنظیم ارتفاع کامل صفحه
 
-**ارتباط بین فایل‌ها و کدها:**
-
+### 🗺️ نقشه ارتباط فایل‌ها:
 ```
-مرورگر (Browser)
- │
- └── درخواست برای رندر صفحه
-      │
-      └── views/components/layout.blade.php
-           │
-           └── <script src="...">
-                │
-                └── درخواست به cdn.tailwindcss.com برای دریافت استایل‌ها
+layout.blade.php (کامپوننت اصلی)
+    ↓ استفاده در
+home.blade.php, about.blade.php, contact.blade.php
+    ↓ ارتباط با
+web.php (routes) → Controllers → Views
 ```
-
-**نکات کلیدی مهم:**
-
-*   **استفاده از CDN:** این روش برای مراحل توسعه، یادگیری و نمونه‌سازی (Prototyping) بسیار عالی و سریع است. اما برای پروژه‌های واقعی (Production)، توصیه می‌شود از ابزارهای ساخت مانند Vite یا Webpack استفاده کنید تا فقط CSS مورد نیاز پروژه شما در فایل نهایی گنجانده شود و حجم آن بهینه باشد.
-*   **اهمیت `<head>`:** قرار دادن این اسکریپت در تگ `<head>` تضمین می‌کند که استایل‌ها قبل از رندر شدن بدنه (body) صفحه بارگذاری شوند و از پدیده "Flash of Unstyled Content" (FOUC) جلوگیری شود.
 
 ---
 
-### **بخش ۲: داینامیک کردن محتوای صفحات با Blade**
+## 2️⃣ مفهوم Slots در Blade
 
-اکنون که ظاهر کلی برنامه را داریم، باید محتوای هر صفحه را به صورت داینامیک درون این layout قرار دهیم. اینجا قدرت سیستم کامپوننت و اسلات Blade نمایان می‌شود.
+### 🔤 فلوی گرامری:
+1. تعریف Default Slot با `{{ $slot }}`
+2. ایجاد Named Slots با `<x-slot:name>`
+3. استفاده از Named Slots در صفحات مختلف
+4. تفکیک بین محتوای ثابت و متغیر
 
-#### **۲.۲. معرفی اسلات‌های نام‌گذاری شده (Named Slots)**
+### 📝 قطعه کد آموزشی:
 
-گاهی یک کامپوننت بیش از یک بخش متغیر دارد. برای مثال، layout ما هم یک "محتوای اصلی" و هم یک "عنوان" متغیر دارد. اینجا از اسلات‌های نام‌گذاری شده استفاده می‌کنیم.
-
-**فلوی گرامری (Grammar Flow):**
-
-1.  در فایل `layout.blade.php`، به جای یک متغیر PHP مثل `$heading`، از یک متغیر Blade با دو آکولاد `{{ $heading }}` استفاده می‌کنیم. این متغیر نماینده یک اسلات نام‌گذاری شده است.
-2.  در فایل‌های view فرزند (مانند `home.view.php`)، از یک تگ سفارشی به شکل `<x-slot:name>` استفاده می‌کنیم.
-3.  `name` را با نام اسلات مورد نظر (در اینجا `heading`) جایگزین می‌کنیم.
-4.  محتوای دلخواه خود را بین تگ باز و بسته `<x-slot>` قرار می‌دهیم.
-
-**کد نمونه:**
-
-```php:views/components/layout.blade.php
-{{-- ... --}}
-<header class="bg-white shadow">
-    <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-        {{-- این متغیر، محتوای اسلات 'heading' را نمایش می‌دهد --}}
-        <h1 class="text-3xl font-bold tracking-tight text-gray-900">{{ $heading }}</h1>
-    </div>
-</header>
-<main>
-    <div class="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
-        {{-- این اسلات پیش‌فرض است --}}
-        {{ $slot }}
-    </div>
-</main>
-{{-- ... --}}
+```html
+<!-- resources/views/components/layout.blade.php -->
+<div class="min-h-full">
+    <header class="bg-white shadow">
+        <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+            <!-- Named Slot برای عنوان صفحه -->
+            <h1 class="text-3xl font-bold tracking-tight text-gray-900">
+                {{ $heading }}
+            </h1>
+        </div>
+    </header>
+    
+    <main>
+        <div class="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
+            <!-- Default Slot برای محتوای اصلی -->
+            {{ $slot }}
+        </div>
+    </main>
+</div>
 ```
 
-```php:views/home.view.php
+```html
+<!-- resources/views/home.blade.php -->
 <x-layout>
-    {{-- تزریق محتوا به اسلات 'heading' --}}
+    <!-- Named Slot برای عنوان -->
     <x-slot:heading>
         Home Page
     </x-slot:heading>
-
-    {{-- محتوایی که در ادامه می‌آید، به صورت خودکار به اسلات پیش‌فرض (slot$) می‌رود --}}
-    <h1>Hello from the Home Page.</h1>
-
-    {{--
-        خروجی نهایی در HTML:
-        <h1 class="text-3xl ...">Home Page</h1>
-        ...
-        <main>
-            ...
-            <h1>Hello from the Home Page.</h1>
-        </main>
-    --}}
+    
+    <!-- Default Slot برای محتوا -->
+    <div class="bg-white">
+        <p>Welcome to the home page!</p>
+    </div>
 </x-layout>
 ```
 
-**فلوی معنایی (Semantic Flow):**
+### 🔍 فلوی معنایی و خروجی:
+1. **Named Slot**: `{{ $heading }}` محتوای عنوان را از `<x-slot:heading>` دریافت می‌کند
+2. **Default Slot**: `{{ $slot }}` محتوای اصلی صفحه را نمایش می‌دهد
+3. **Dynamic Content**: هر صفحه می‌تواند عنوان و محتوای مختلف داشته باشد
+4. **خروجی**: صفحه‌ای با عنوان "Home Page" و محتوای "Welcome to the home page!"
 
-1.  وقتی `home.view.php` رندر می‌شود، موتور Blade ابتدا کامپوننت `<x-layout>` را پیدا می‌کند.
-2.  سپس به دنبال تگ‌های `<x-slot:...>` درون آن می‌گردد.
-3.  محتوای درون تگ `<x-slot:heading>` را برداشته و در متغیر `$heading` در فایل `layout.blade.php` قرار می‌دهد.
-4.  هر محتوای دیگری که مستقیماً درون `<x-layout>` باشد (و در هیچ `<x-slot>` دیگری نباشد) را برداشته و در متغیر پیش‌فرض `$slot` قرار می‌دهد.
-5.  در نهایت، `layout.blade.php` با متغیرهای پر شده (`$heading` و `$slot`) به عنوان HTML نهایی رندر می‌شود.
+### ⚙️ نکات فنی کلیدی:
+1. **Slot Naming**: نام‌گذاری slots با `:` مانند `<x-slot:heading>`
+2. **Variable Access**: دسترسی به named slots با `{{ $variableName }}`
+3. **Content Separation**: تفکیک محتوای static از dynamic
+4. **Flexibility**: امکان استفاده مجدد layout در صفحات مختلف
 
-**ارتباط بین فایل‌ها و کدها:**
-
+### 🗺️ نقشه ارتباط فایل‌ها:
 ```
-views/home.view.php
- │
- ├── defines <x-slot:heading>
- │
- └── defines default slot content
-      │
-      └── injects into a variable in
-           │
-           └── views/components/layout.blade.php
-                ├── renders `{{ $heading }}`
-                └── renders `{{ $slot }}`
+layout.blade.php (تعریف slots)
+    ↑ استفاده از
+home.blade.php (پر کردن slots)
+about.blade.php (پر کردن slots)
+contact.blade.php (پر کردن slots)
 ```
-
-**نکات کلیدی مهم:**
-
-*   **خوانایی و تفکیک:** اسلات‌های نام‌گذاری شده به ما اجازه می‌دهند که بخش‌های مختلف یک کامپوننت را به صورت کاملاً خوانا و مجزا از هم مقداردهی کنیم. این کار به شدت به تمیزی کد در viewهای فرزند کمک می‌کند.
-*   **انعطاف‌پذیری:** شما می‌توانید هر تعداد اسلات نام‌گذاری شده که نیاز دارید در کامپوننت خود تعریف کنید (`footer`, `sidebar`, `scripts`, ...)، که این کامپوننت‌ها را بسیار قدرتمند و انعطاف‌پذیر می‌کند.
 
 ---
 
-### **بخش ۳: مدیریت هوشمند لینک‌های ناوبری (Navigation)**
+## 3️⃣ مدیریت Navigation و Active States
 
-یک چالش رایج در وب‌اپلیکیشن‌ها، نمایش بصری صفحه‌ای است که کاربر در حال حاضر در آن قرار دارد (مثلاً هایلایت کردن لینک آن در منو). در این بخش، این چالش را به روشی استاندارد حل می‌کنیم.
+### 🔤 فلوی گرامری:
+1. ایجاد Navigation Links در Layout
+2. استفاده از Laravel Request Helper
+3. پیاده‌سازی Conditional Styling
+4. تشخیص صفحه فعال با `request()->is()`
 
-#### **۳.۲.۲. تشخیص مسیر فعلی با تابع کمکی `request()->is()`**
+### 📝 قطعه کد آموزشی:
 
-**فلوی گرامری (Grammar Flow):**
-
-1.  درون تگ `<a>`، برای اتریبیوت `class`، از یک عبارت شرطی PHP استفاده می‌کنیم.
-2.  شرط ما، فراخوانی تابع کمکی `request()` و سپس متد `is('path')` روی آن است. این متد چک می‌کند که آیا مسیر URI فعلی با الگوی داده شده (مثلاً `/` برای صفحه اصلی یا `about` برای صفحه درباره ما) مطابقت دارد یا خیر.
-3.  اگر شرط `true` بود، کلاس‌های CSS مربوط به لینک فعال را برمی‌گردانیم.
-4.  اگر شرط `false` بود، کلاس‌های CSS مربوط به لینک غیرفعال را برمی‌گردانیم.
-5.  همین منطق را برای اتریبیوت `aria-current` نیز پیاده‌سازی می‌کنیم تا برنامه ما برای صفحه‌خوان‌ها (Screen Readers) نیز قابل دسترس باشد.
-
-**کد نمونه:**
-
-```php:views/partials/nav.php (مثال ساده شده از منطق)
-<div class="space-x-4">
-    <a href="/"
-       class="{{ request()->is('/') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700' }} rounded-md px-3 py-2 text-sm font-medium"
-       aria-current="{{ request()->is('/') ? 'page' : 'false' }}">Home</a>
-
-    <a href="/about"
-       class="{{ request()->is('about') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700' }} rounded-md px-3 py-2 text-sm font-medium"
-       aria-current="{{ request()->is('about') ? 'page' : 'false' }}">About</a>
-</div>
+```html
+<!-- resources/views/components/layout.blade.php -->
+<nav class="bg-gray-800">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="flex h-16 items-center justify-between">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <img class="h-8 w-8" src="/images/logo.png" alt="Logo">
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <!-- Home Link -->
+                        <a href="/" 
+                           class="{{ request()->is('/') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }} rounded-md px-3 py-2 text-sm font-medium"
+                           aria-current="{{ request()->is('/') ? 'page' : 'false' }}">
+                            Home
+                        </a>
+                        
+                        <!-- About Link -->
+                        <a href="/about" 
+                           class="{{ request()->is('about') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }} rounded-md px-3 py-2 text-sm font-medium"
+                           aria-current="{{ request()->is('about') ? 'page' : 'false' }}">
+                            About
+                        </a>
+                        
+                        <!-- Contact Link -->
+                        <a href="/contact" 
+                           class="{{ request()->is('contact') ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }} rounded-md px-3 py-2 text-sm font-medium"
+                           aria-current="{{ request()->is('contact') ? 'page' : 'false' }}">
+                            Contact
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
 ```
 
-**فلوی معنایی (Semantic Flow):**
+### 🔍 فلوی معنایی و خروجی:
+1. **Request Helper**: `request()->is('/')` بررسی می‌کند که آیا URL فعلی با الگوی داده شده مطابقت دارد
+2. **Conditional Classes**: اگر صفحه فعال باشد کلاس‌های `bg-gray-900 text-white` اعمال می‌شود
+3. **Hover States**: برای صفحات غیرفعال hover effects با `hover:bg-gray-700` فعال است
+4. **خروجی**: Navigation با highlighting صحیح صفحه فعال
 
-1.  کاربر روی لینک "About" کلیک می‌کند و به آدرس `your-site.com/about` می‌رود.
-2.  لاراول درخواست را پردازش می‌کند. در این لحظه، URI درخواست برابر با `about` است.
-3.  هنگام رندر کردن منوی ناوبری:
-    *   برای لینک "Home"، شرط `request()->is('/')` مقدار `false` برمی‌گرداند و استایل غیرفعال اعمال می‌شود.
-    *   برای لینک "About"، شرط `request()->is('about')` مقدار `true` برمی‌گرداند و استایل فعال (`bg-gray-900 text-white`) اعمال می‌شود.
-4.  در نتیجه، کاربر به صورت بصری متوجه می‌شود که در صفحه "About" قرار دارد.
+### ⚙️ نکات فنی کلیدی:
+1. **Ternary Operator**: استفاده از `condition ? true_value : false_value`
+2. **Accessibility**: `aria-current="page"` برای screen readers
+3. **Responsive Design**: `hidden md:block` برای مخفی کردن در موبایل
+4. **Pattern Matching**: `request()->is()` از regex patterns پشتیبانی می‌کند
 
-**ارتباط بین فایل‌ها و کدها:**
-
+### 🗺️ نقشه ارتباط فایل‌ها:
 ```
-Router (routes/web.php)
- │
- └── matches incoming URL to a controller/view
-      │
-      └── View (e.g., about.view.php)
-           │
-           └── includes navigation partial
-                │
-                └── nav.php
-                     │
-                     └── PHP code: request()->is(...)
-                          │
-                          └── inspects the current request URI
+layout.blade.php (navigation logic)
+    ↓ استفاده از
+Laravel Request Object
+    ↓ بررسی
+web.php (routes: /, /about, /contact)
+    ↓ رندر
+home.blade.php, about.blade.php, contact.blade.php
 ```
-
-**نکات کلیدی مهم:**
-
-*   **تابع `request()`:** یک تابع کمکی (Helper Function) سراسری و قدرتمند در لاراول است که دسترسی آسان به اطلاعات درخواست HTTP فعلی (شامل URI, Method, Headers, Inputs) را فراهم می‌کند.
-*   **الگوهای `is()`:** متد `is()` بسیار انعطاف‌پذیر است. شما می‌توانید از wildcard `*` استفاده کنید. برای مثال `request()->is('notes/*')` برای تمام صفحات مربوط به یادداشت‌ها (مانند `notes/1` یا `notes/create`) مقدار `true` برمی‌گرداند.
-*   **شلوغی کد (Code Clutter):** این روش کاملاً کار می‌کند، اما تکرار این منطق طولانی برای هر لینک، کد HTML ما را کثیف و نگهداری آن را دشوار می‌کند. این دقیقاً همان نقطه‌ای است که یک مهندس نرم‌افزار به فکر بازسازی (Refactoring) می‌افتد.
 
 ---
 
-#### **۳.۳. بازسازی کد به یک کامپوننت `NavLink` (رویکرد حرفه‌ای)**
+## 4️⃣ ایجاد کامپوننت NavLink قابل استفاده مجدد
 
-برای حل مشکل شلوغی کد و تکرار منطق، ما تمام این قابلیت‌ها را در یک کامپوننت Blade قابل استفاده مجدد به نام `NavLink` کپسوله می‌کنیم.
+### 🔤 فلوی گرامری:
+1. ایجاد کامپوننت جداگانه برای Navigation Links
+2. تعریف Props و Attributes
+3. استفاده از `@props` directive
+4. پیاده‌سازی logic تشخیص active state
 
-**فلوی گرامری (Grammar Flow):**
+### 📝 قطعه کد آموزشی:
 
-1.  یک فایل جدید در `views/components/nav-link.blade.php` ایجاد می‌کنیم.
-2.  در بالای این فایل، با استفاده از دایرکتیو `@props`، مشخص می‌کنیم که این کامپوننت چه پراپرتی‌های سفارشی (Props) را می‌پذیرد. ما یک `href` و یک پراپرتی boolean به نام `active` تعریف می‌کنیم.
-3.  کد HTML تگ `<a>` را به این فایل منتقل می‌کنیم.
-4.  به جای مقادیر ثابت، از متغیرهای prop استفاده می‌کنیم (`{{ $href }}`).
-5.  برای کلاس‌ها، از پراپرتی `$active` در یک شرط سه‌تایی استفاده می‌کنیم.
-6.  در فایل `nav.php`، تگ‌های `<a>` قبلی را با تگ کامپوننت جدید `<x-nav-link>` جایگزین می‌کنیم.
-7.  مقادیر `href` و `active` را به صورت اتریبیوت به این کامپوننت پاس می‌دهیم.
+```php
+{{-- resources/views/components/nav-link.blade.php --}}
+@props(['active' => false])
 
-**کد نمونه:**
-
-```php:views/components/nav-link.blade.php
-@props(['href', 'active' => false]) {{-- تعریف props --}}
-
-<a href="{{ $href }}"
-   class="{{ $active ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700' }} rounded-md px-3 py-2 text-sm font-medium"
-   aria-current="{{ $active ? 'page' : 'false' }}"
->
-    {{ $slot }} {{-- محتوای بین تگ کامپوننت در اینجا قرار می‌گیرد --}}
+<a {{ $attributes }}
+   class="{{ $active ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }} rounded-md px-3 py-2 text-sm font-medium"
+   aria-current="{{ $active ? 'page' : 'false' }}">
+    {{ $slot }}
 </a>
 ```
 
-```php:views/partials/nav.php
-<div class="space-x-4">
-    {{-- استفاده از کامپوننت جدید با پاس دادن props --}}
-    <x-nav-link href="/" :active="request()->is('/')">Home</x-nav-link>
-    <x-nav-link href="/about" :active="request()->is('about')">About</x-nav-link>
-    <x-nav-link href="/contact" :active="request()->is('contact')">Contact</x-nav-link>
-
-    {{--
-        خروجی برای لینک Home در صفحه اصلی:
-        <a href="/" class="bg-gray-900 text-white ..." aria-current="page">Home</a>
-
-        خروجی برای لینک Home در صفحه About:
-        <a href="/" class="text-gray-300 hover:bg-gray-700 ..." aria-current="false">Home</a>
-    --}}
+```html
+<!-- resources/views/components/layout.blade.php - استفاده از NavLink -->
+<div class="ml-10 flex items-baseline space-x-4">
+    <!-- استفاده از کامپوننت NavLink -->
+    <x-nav-link href="/" :active="request()->is('/')">
+        Home
+    </x-nav-link>
+    
+    <x-nav-link href="/about" :active="request()->is('about')">
+        About
+    </x-nav-link>
+    
+    <x-nav-link href="/contact" :active="request()->is('contact')">
+        Contact
+    </x-nav-link>
 </div>
 ```
 
-**فلوی معنایی (Semantic Flow):**
+### 🔍 فلوی معنایی و خروجی:
+1. **Props Declaration**: `@props(['active' => false])` تعریف می‌کند که کامپوننت یک prop به نام `active` دارد
+2. **Attribute Merging**: `{{ $attributes }}` تمام attributes مانند `href` را به anchor tag اضافه می‌کند
+3. **Dynamic Binding**: `:active="request()->is('/')"` مقدار boolean به prop منتقل می‌کند
+4. **خروجی**: Navigation links با کد تمیز و قابل استفاده مجدد
 
-1.  در فایل `nav.php`، موتور Blade تگ `<x-nav-link>` را می‌بیند.
-2.  مقدار `href` را به عنوان یک رشته و نتیجه‌ی `request()->is('/')` (که `true` یا `false` است) را به عنوان پراپرتی `active` به کامپوننت `nav-link.blade.php` پاس می‌دهد.
-3.  متن قرار گرفته بین تگ‌های `<x-nav-link>` (یعنی "Home") به اسلات پیش‌فرض (`$slot`) منتقل می‌شود.
-4.  کامپوننت `nav-link` با استفاده از این مقادیر (`href`, `active`, `slot`)، تگ `<a>` نهایی را با کلاس‌ها و اتریبیوت‌های صحیح تولید می‌کند.
-5.  نتیجه نهایی، کدی بسیار تمیزتر، خواناتر و قابل نگهداری در `nav.php` است، در حالی که تمام منطق پیچیده در کامپوننت `NavLink` پنهان شده است.
+### ⚙️ نکات فنی کلیدی:
+1. **Props vs Attributes**: Props برای logic، Attributes برای HTML attributes
+2. **Default Values**: تنظیم مقدار پیش‌فرض `false` برای prop
+3. **Dynamic Binding**: استفاده از `:` برای ارسال expressions به props
+4. **Component Reusability**: کاهش تکرار کد و افزایش maintainability
 
-**ارتباط بین فایل‌ها و کدها:**
-
+### 🗺️ نقشه ارتباط فایل‌ها:
 ```
-views/partials/nav.php
- │
- └── uses <x-nav-link> component
-      │
-      ├── passes `href` prop
-      ├── passes `active` prop (using request()->is())
-      └── passes `slot` content (the link text)
-           │
-           └── to be processed by
-                │
-                └── views/components/nav-link.blade.php
-                     │
-                     └── generates the final <a> tag with conditional logic
+nav-link.blade.php (کامپوننت قابل استفاده مجدد)
+    ↑ استفاده در
+layout.blade.php (navigation section)
+    ↑ استفاده در
+تمام صفحات (home, about, contact)
+    ↓ داده‌ها از
+Laravel Request Object (route detection)
 ```
 
-**نکات کلیدی مهم:**
+---
 
-*   **Props vs Attributes:** پراپ‌ها (`@props`) داده‌های سفارشی هستند که شما برای کنترل منطق کامپوننت خود تعریف می‌کنید. اتریبیوت‌ها (`$attributes`) مجموعه‌ای از اتریبیوت‌های استاندارد HTML هستند (مانند `id`, `class`, `data-*`) که می‌توانید مستقیماً به تگ اصلی در کامپوننت خود منتقل کنید. این تفکیک برای ساخت کامپوننت‌های تمیز ضروری است.
-*   **سینتکس `:` برای Props:** وقتی می‌خواهید یک متغیر PHP یا نتیجه یک تابع (و نه یک رشته ثابت) را به یک prop پاس دهید، باید قبل از نام آن از `:` استفاده کنید (مثلاً `:active="..."`). این به Blade می‌گوید که محتوای داخل "" را به عنوان کد PHP اجرا کند.
-*   **اصل تک مسئولیتی (Single Responsibility Principle):** این بازسازی یک مثال کلاسیک از این اصل مهم مهندسی نرم‌افزار است. کامپوننت `NavLink` اکنون فقط یک مسئولیت دارد: رندر کردن یک لینک ناوبری با استایل‌دهی فعال/غیرفعال. فایل `nav.php` هم فقط یک مسئولیت دارد: لیست کردن لینک‌های ناوبری. این تفکیک، کد را برای آینده بسیار مقیاس‌پذیرتر و قابل فهم‌تر می‌کند.
+## 5️⃣ بهینه‌سازی و Best Practices
+
+### 🔤 فلوی گرامری:
+1. تفکیک منطق component از presentation
+2. پیاده‌سازی Accessibility features
+3. مدیریت responsive design
+4. سازماندهی component structure
+
+### 📝 قطعه کد آموزشی:
+
+```php
+{{-- resources/views/components/nav-link.blade.php - نسخه بهینه --}}
+@props([
+    'active' => false,
+    'href' => '#'
+])
+
+@php
+    // تعریف classes در PHP برای خوانایی بهتر
+    $classes = $active 
+        ? 'bg-gray-900 text-white' 
+        : 'text-gray-300 hover:bg-gray-700 hover:text-white';
+    
+    $baseClasses = 'rounded-md px-3 py-2 text-sm font-medium transition-colors duration-200';
+    $finalClasses = $baseClasses . ' ' . $classes;
+@endphp
+
+<a href="{{ $href }}"
+   class="{{ $finalClasses }}"
+   aria-current="{{ $active ? 'page' : 'false' }}"
+   {{ $attributes->except(['active', 'href']) }}>
+    {{ $slot }}
+</a>
+```
+
+```html
+<!-- resources/views/components/layout.blade.php - Mobile Navigation -->
+<!-- Mobile menu button -->
+<div class="md:hidden">
+    <button type="button" 
+            class="inline-flex items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400 hover:bg-gray-700 hover:text-white"
+            aria-controls="mobile-menu" 
+            aria-expanded="false">
+        <span class="sr-only">Open main menu</span>
+        <!-- Menu Icon -->
+        <svg class="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+        </svg>
+    </button>
+</div>
+
+<!-- Mobile Navigation Menu -->
+<div class="md:hidden" id="mobile-menu">
+    <div class="space-y-1 px-2 pb-3 pt-2 sm:px-3">
+        <x-nav-link href="/" :active="request()->is('/')" class="block">
+            Home
+        </x-nav-link>
+        <x-nav-link href="/about" :active="request()->is('about')" class="block">
+            About
+        </x-nav-link>
+        <x-nav-link href="/contact" :active="request()->is('contact')" class="block">
+            Contact
+        </x-nav-link>
+    </div>
+</div>
+```
+
+### 🔍 فلوی معنایی و خروجی:
+1. **Class Management**: تفکیک classes به base و conditional برای مدیریت بهتر
+2. **Transition Effects**: اضافه کردن `transition-colors duration-200` برای smooth animations
+3. **Attribute Filtering**: `$attributes->except()` برای جلوگیری از duplicate attributes
+4. **خروجی**: Navigation responsive با mobile menu و animations
+
+### ⚙️ نکات فنی کلیدی:
+1. **Performance**: استفاده از CSS transitions به جای JavaScript animations
+2. **Accessibility**: `aria-controls`, `aria-expanded`, `sr-only` برای screen readers
+3. **Responsive Strategy**: Mobile-first approach با `md:hidden` و `md:block`
+4. **Code Organization**: تفکیک logic در `@php` blocks برای خوانایی
+
+### 🗺️ نقشه ارتباط فایل‌ها:
+```
+Project Structure:
+├── resources/views/components/
+│   ├── layout.blade.php (اصلی)
+│   └── nav-link.blade.php (قابل استفاده مجدد)
+├── resources/views/
+│   ├── home.blade.php
+│   ├── about.blade.php
+│   └── contact.blade.php
+├── routes/web.php (تعریف routes)
+└── app/Http/Controllers/ (controllers)
+
+Data Flow:
+Request → Router → Controller → View → Components → Output
+```
+
+---
+
+## 📋 خلاصه و نکات کلیدی پروژه
+
+### 🎯 اهداف محقق شده:
+1. **Component-Based Architecture**: ایجاد components قابل استفاده مجدد
+2. **Dynamic Navigation**: سیستم navigation با active state detection
+3. **Responsive Design**: پشتیبانی از desktop و mobile
+4. **Clean Code**: کد تمیز و maintainable با best practices
+
+### 🔧 ابزارها و تکنولوژی‌های استفاده شده:
+- **Laravel Blade**: Template engine برای components
+- **Tailwind CSS**: Utility-first CSS framework
+- **Laravel Request Helper**: برای route detection
+- **Accessibility Features**: ARIA attributes برای screen readers
+
+این جزوه رویکردی مدرن و حرفه‌ای برای توسعه وب با Laravel ارائه می‌دهد که در شرکت‌های بزرگ فناوری قابل استفاده است.

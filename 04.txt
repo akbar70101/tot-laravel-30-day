@@ -1,0 +1,372 @@
+remove that and give it a refresh of
+course we're not going to see them okay
+so yeah what about this active prop well
+let's come back here and just say um
+again for the about page active equals
+and then some kind of value well notice
+if I come back and refresh the page
+there is no reference within here to
+that active uh property and again that's
+specifically because we declared it as a
+property if we didn't do that then larl
+will assume it's an attribute and it
+will be included um as one of the
+attributes that we Echo so that's what I
+mean when I say we have to uh explicitly
+declare any of our props so they can be
+distinguished okay so now instead of
+running this logic here and keep in mind
+we could still do this but I think
+you'll probably find that it's a bit
+more flexible if you pass it in from the
+outside so we're going to replace that
+with a simple check of our prop and we
+can access that prop by using the
+variable name for the prop so if I
+declare active up here I have an active
+variable down here so if that's TR the
+use the active styling otherwise use the
+default styling and that's the way it
+works okay finally because we are
+checking this variable there should be a
+default just in case it's not passed in
+when we reference the nav link so why
+don't we assume that by default it is
+not active all right so notice we pass
+an array the key is effectively the prop
+name and what the variable name will be
+and the value will be the default uh
+value associated with that name or that
+variable all right let's come back into
+layout and yeah let's just try this out
+now for or let's imagine the contact
+page is the active link I can just say
+active and I want to show you something
+so I could pass anything here and it's
+going to work because we're just
+checking if it's truy so if I come back
+to the browser and refresh notice it
+works but notice even if I change this
+to false and come back and refresh it's
+still going to work so how come well
+it's because right now um that false
+value is actually being passed as a
+string rather than a Boolean so is a
+string of five characters truy yes it is
+it doesn't matter if the string says
+false it's still truthy so what we
+really want to do is say no when I write
+false here I actually mean false when I
+write true here I actually mean true not
+the string true so here's how we do that
+let's come back to my editor and notice
+right now false is green just like every
+other string here that's how my editor
+is styling it but if I add a colon at
+the beginning of the attribute it
+changes to make it just a little more
+clear that oh no this is a Boolean it's
+not a string so as it turns out with LL
+and blade when you prefix a prop um name
+with a colon that is your way of
+indicating that the value you provide
+there should be treated as an expression
+rather than a string so notice in this
+case we've given it false it will be
+interpreted as false and it won't be uh
+it won't be selected if I change it to
+true it will be interpreted um as true
+and now that's working all right so now
+that I can provide an expression I can
+bring this back to what we originally
+had which was request is contact in this
+case uh so we're going to copy this and
+now this one should be treated as active
+if the request is about and then for
+home we check if the request is forward
+slash and yeah I think that should do it
+so we have contact about home
+everything's working and now you know
+what you've actually learned
+surprisingly a great deal about blade
+components even before you learned about
+eloquent and that's that's a very
+interesting way to learn but that's just
+how it happened to work out and I think
+that's a good thing actually so now you
+have a dedicated blade component you've
+learned about attributes you've learned
+about props um keep in mind you can also
+do things like this where you could
+declare um a PHP directive and we could
+do n PHP to create our block effectively
+and then Within here you could have some
+kind of code you could do a conditional
+you could uh inspect the value of active
+and then tweak it in certain situations
+and all of that is isolated within the
+single uh file component which I think
+is really
+cool all right and that does it uh so
+you know what really good job I would
+imagine for many of you this is sort of
+foreign territory these are new ideas
+and I I hope you're excited this is fun
+stuff to play around with all right so
+day five homework
+um let's continue with this component
+idea I would like you to introduce a new
+prop we will call the prop type and this
+will indicate whether the nav link
+should be presented as an anchor tag or
+a button tag so think about it within
+your component you will need to run a
+conditional uh if the type equals a then
+it should be an anchor tyde else if the
+type is button then we need to format
+this as a button Buton tag so I want you
+to see if you can figure that out if you
+need help as always ask questions in the
+comments below I'm there most days I
+will do my best to help you and if not
+me somebody else will step in but
+otherwise I will see you as always in
+day
+[Music]
+six all right welcome everybody to day
+six um and actually on that note we're
+about a weekend if you're still going
+strong congratulations please keep going
+okay so today should be fun we're going
+to figure out how to pass data from our
+routes file into our view but um as
+always of course before we get into that
+why don't we solve the homework
+Challenge from the last episode let's go
+all right homework so if you remember I
+asked you to update your navlink
+component to include a type prop I said
+the type could be an anchor tag or a
+button and we should INSP that value to
+determine whether or not we create an
+anchor tag or a button so here's one
+option and first let's create a default
+value so by default if you don't pass a
+type prop uh when you when you reference
+the component here we will assume that
+it is an a an anchor tag but it could be
+a button so why don't we try like let's
+imagine contact here should be uh a
+button so I want to pass that in as a
+string so I don't have to include a
+colon because by default it assumes a
+string and that's what we want all right
+so the quick way to do it in this case
+is we could probably just get away with
+changing uh the tag name to reference
+our variable now I say we could get away
+with this because I think it's going to
+work let's have a look refresh and now
+we have home about but I bet when I
+click on contact it doesn't work because
+it's being rendered As A Button as you
+see here so yeah it does work but here's
+what I mean if we switch back notice our
+editor struggling here we got a lot
+going on and if I hover over this
+squiggly line it says tag start is not
+closed because it just can't handle uh
+something like this so instead what we
+might do is split it into two real tags
+so here's what we could do let's undo it
+bring it back to what we had and we're
+going to take this in two steps so first
+we could open up traditional HP tags and
+I could say if type equals a we're going
+to use the um the short tags then
+display an anchor tag and then down here
+let's handle the else uh condition and
+then finally one more to close our
+conditional okay so we could copy this
+paste it in and notice in this case we
+could check if the type equals button
+but in this case it can only be an
+anchor tag or a button so I can safely
+just say if it's not an anchor tag no
+matter what it is we're going to treat
+it like a button but yeah if you want to
+be a little more strict you can do that
+okay so otherwise um create a button so
+we're going to accomplish the exact same
+thing but yeah our editor will beat us
+up just a little bit uh less all right
+let's come back refresh once again and
+yeah now we have home is an anchor tag
+about is an anchor tag and contact is a
+button uh and of course notice the
+button still has an href because we did
+pass it in so of course you would want
+to switch back and if you're trying to
+create a button then of course you would
+omit the hre in that case but yeah it's
+still going to work just the same okay
+so now finally step two like I said we
+can use these traditional um PHP tags of
+course but blade includes helpers to
+simplify some of these steps so just
+keep in mind though like behind the
+scenes it all gets compiled down to
+vanilla PHP as we've learned but it's a
+little bit easier to use the blade
+directives just like uh what you learned
+about in the last episode when it came
+to props so as it turns out we could
+swap this out with a blade directive
+called at symbol if so if in this case
+type equals a then run this code next
+this is else right so as you can guess
+the blade directive is called else and
+then finally down here indiff well we
+have a blade directive called indiff
+yeah that's what I mean and let's uh
+reformat that this real quick there we
+go it's the exact same thing it's just a
+little bit easier on the eyes and easier
+on the fingers too so let's go back to
+the browser give it a refresh
+everything's working just like before
+and again I can't click on the contact
+page because it's a button that works
+all right but yeah this was just an
+exercise I'm undoing all of this uh
+because we don't need it in this case it
+was just an example bring this back I'm
+wearing out command Z but I think we are
+in business okay okay so let's move on
+to the topic for this episode which is
+passing data to views so let's close
+this out and I'm going to go to my
+routes file now I I I'll let you know
+right now um it helps initially to
+manually open the directory and find the
+file but in real life I'm not doing that
+uh usually I have the sidebar closed and
+in my editor and probably yours too you
+could hit something along the lines of
+command or contrl p and then you can
+type the file that you want to access so
+in this case it is web.php and yeah
+that's just normally how I would
+navigate my project but yes sometimes I
+will open the sidebar just to make it
+Crystal Clear where we're going in the
+code base Okay cool so why don't we
+stick with the homepage so as it turns
+out we can pass a second argument to
+this view function that will be an array
+where each of the keys will be extracted
+into variables once your view uh or your
+template is loaded so for example if I
+have um greeting equals hello well now
+when I load my view I will have access
+to a variable called greeting let's try
+it out make sure you're working Along by
+the way so open up the sidebar again we
+will go into our home View and now I
+have access to a greeting so I could
+swap this out with greeting period all
+right so let's switch back refresh and
+whoops looks like we have an error and
+actually this is a good opportunity to
+be introduced to lel's error page which
+is really good when I was just getting
+started it wasn't nearly as helpful uh
+but yeah in this case we can see the
+issue it looks like it's related to our
+component and we have an unclosed uh
+bracket so I might have been a little
+bit too aggressive when we hit that
+command C button all right did that fix
+it yes it did and sure enough we have
+our greeting so if we come back to
+routes yo come back refresh it is
+working properly so let's do another one
+um um name you know n of these matter I
+will do Larry robot okay now we have a
+greeting variable and a name variable so
+I can reference that
+here just like that come back refresh
+everything's working all right very cool
+so now let's switch back let's get rid
+of all this actually let's switch back
+and pass through something slightly more
+complex um ultimately in this course
+we're going to build a job sport
+so why don't we start thinking about
+that uh maybe we could have a list of
+jobs that are currently available so the
+variable name will be jobs or the key
+name is jobs and that won't be a string
+it will be an array of available jobs
+where each item is its own array and
+then you could have things like this
+like what is the title of this job well
+maybe director and then maybe salary and
+we'll lock that to you know whatever
+$50,000 uh a year okay so there's one
+item why don't we do a total of three
+this next one is programmer and this one
+you know what with AI we're going down
+the tubes let's bring this down to
+$10,000 a year to be a human programmer
+and then finally why don't we have um
+teacher uh at a school maybe $40,000 or
+something like that all right so now
+when we load our view we will have
+access to a jobs variable that is equal
+to a list of jobs now let's go ahead and
+loop over them so again I could open up
+PHP and say four each but let's instead
+use one of the blade directives and
+again what's cool about these directives
+is you can guess what they're called if
+I want to do a four each then the blade
+directive is called for each all right
+for each jobs as job and then of course
+you need to declare um the end of the
+block right so you will almost always
+have an end and then the name of the um
+the directive end for each okay so let's
+begin with a simple list item where I
+Echo out the job uh title and let's have
+a look in the browser refresh and there
+we go we have three jobs a director a
+programmer and a teacher uh next why
+don't we do a colon and we'll say pays
+uh and then we'll do job
+salary per year come back refresh there
+we go uh why don't we make this bold so
+what I'll do is wrap this within a
+simple strong
+tag and there we go so now with that in
+mind why don't we tweak things just a
+little bit uh instead of an about page
+I'm going to change this to a jobs page
+get rid of
+that and if I were to come back to web
+now this could become jobs and that's
+going to load a view called jobs okay so
+now I'm going to take or steal all of
+this and paste it in
+like so and then this can return to a
+simple
+homepage all right so all I did was
+create a new route that listens for when
+the user visits example.com or example.
+test/ jobs and in response it loads a
+view called jobs and it passes through
+this data that we're currently
+hardcoding but of course you know in
+real life that will probably be fetched
+from a database and we'll talk about
+that in an episode or two all right so
