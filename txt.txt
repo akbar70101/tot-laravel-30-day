@@ -2248,6 +2248,9 @@ work let's click on this one here and
 yeah it wants us to know what's the name
 we're going to call this our example
 database and next it wants a path to
+
+375///////////////////////////////////part06-end
+
 that file so we're going to give it a
 path directly here now you can either
 manually select the file or I will just
@@ -2630,6 +2633,9 @@ I can just do one and this will be
 $660,000 and the title is programmer
 cool so you see how easy that was we
 were able to uh entirely strip our
+
+375///////////////////////////////////part07-end
+
 little API that we built in that job
 class because eloquent includes it and
 way more uh directly out of the box
@@ -3012,6 +3018,9 @@ fake function here uh this makes use of
 an API called Faker and I'll switch back
 here and Faker includes a variety of
 methods for just about any form of fake
+
+375///////////////////////////////////part08-end
+
 data you can imagine and what's cool
 about apis like this is you can just
 guess what it is so for example if I
@@ -3384,6 +3393,9 @@ that structure on the database end but
 in our PHP code it just doesn't exist so
 let's make it exist and luckily eloquent
 has our back I'm going to create a
+
+375///////////////////////////////////part09-end
+
 method here called employer so if I have
 a job and I need information about the
 employer then the method will be called
@@ -3756,6 +3768,9 @@ want to do it in reverse now what's cool
 is when it comes to belongs to many
 relationships it's the exact same code
 on both ends so for example if I go to
+
+375///////////////////////////////////part10-end
+
 tag imagine we have our tag object and I
 want to access all of the jobs that are
 associated with this tag then I would do
@@ -4136,6 +4151,9 @@ in really good shape so in the next
 episode we will move on to day 14 I'll
 see you then
 [Music]
+
+375///////////////////////////////////part11-end
+
 all right welcome back so today I'd like
 to have a look at pagination so check
 this out if I return to my routes file

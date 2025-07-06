@@ -1,0 +1,384 @@
+
+that file so we're going to give it a
+path directly here now you can either
+manually select the file or I will just
+do it in line users Jeffrey way herd
+because we installed herd in that
+directory my project is called example
+database and then the file is
+database.sql
+okay I'm going to give it a test to make
+sure that worked looks good let's give
+it a color of green save it and then I
+can double click here and here we go
+we're all set we're connected so here's
+all of the tables that are available to
+us we have one for users and sessions
+and migrations and jobs and failed jobs
+most of these I'll warn you are used
+internally by the framework and honestly
+you can almost forget they exist
+especially right now they are not
+important to you other than uh
+potentially this users table so come
+down here uh we can see the data and in
+this case there is no data yet we don't
+have any records but if I click over to
+the structure tab here's the structure
+for each of the corresponding tables so
+for a user of course a user consists of
+a name and an email address and a
+password and uh various timestamps which
+is great and we can append to these if
+we need to so if I switch back to PHP
+storm now you'll see there's a
+migrations folder and actually I just
+want to show you this one more time if I
+switch back to the command line when we
+ran that P P Artis migrate command it
+ran these files right here have a look
+create users table create cache create
+jobs table so it seems like the logic
+for creating one of these tables is
+coded in PHP which is neat if I switch
+back let's open it up and here are the
+three files now these are long file
+names because they include the timestamp
+but that's okay so if we have a look at
+the users table inside the sidebar yeah
+this is think of this as the blueprint
+for a table so we can see right here we
+want to create a table called users and
+then create a table called password
+reset tokens and then create a table
+called sessions and real quick if I
+switch back there's users there's
+password reset tokens and there's
+sessions they're all here and they were
+defined within this very file okay so
+now within the closure here this is
+where we we construct uh the table
+effectively so a users table needs to
+have a unique ID so we call this ID
+method let's come back there's the ID
+next it should have a name and that
+should be of type string so there's a
+name next it should have another string
+column for email but we want that one to
+be unique and yeah we can keep going on
+here we have a password we have
+timestamps and they're all represented
+here okay so what if we wanted to add
+something else like what if instead of
+name we wanted first name and then last
+name well I could do something just like
+this okay but it's not magical I can't
+change this file and then switch back
+and give it a refresh we have to rerun
+the migrations and that's what I want
+you to think of this file as it's a
+migration file okay you can run your
+migrations to make these take effect you
+can roll them back you can reset them
+it's really very cool actually on this
+note one of the coolest things about
+migrations is how because it's defined
+in PHP and effectively inversion control
+I can then share this with a teammate
+and then he or she only has to run a
+single command to generate a database
+that looks identically to mine so
+there's no more of that like trying to
+manually keep things in sync what's your
+table look like did you add the index
+here make sure yours looks like mine
+that's a nightmare you don't want to get
+into that situation and this solves
+that okay so let's make this take effect
+I'll switch back to the terminal and run
+PHP Artis to view all of the available
+commands and we'll scroll up to the ones
+related to running our
+migrations now I see two immediately
+useful ones migrate refresh and notice
+that resets everything and starts your
+migrations from scratch so of course you
+would never run this within production
+because it would drop all of your
+database records but yeah in the initial
+development stage this is incredibly
+helpful it's a way to say okay just drop
+everything and build up my database from
+scratch once again the next useful one
+is migrate roll back roll back the
+latest or most recent database migration
+so yeah notice if I open up the sidebar
+each of these is its own migration and
+you will create more on your own so you
+could have a migration to make a table
+you could have a migration to drop a
+table you could have a migration to add
+a couple columns to a table or remove a
+column any of those could be their own
+migrations just think of them as actions
+that you want to perform on a database
+Okay so you could say well just roll
+back the most recent one we ran uh and
+then rerun it these are all things that
+you can do directly from the command
+line okay but yeah in our case we
+haven't done anything yet so I will
+refresh all of our migrations from
+scratch PHP Artis migrate colon bres and
+notice it drops all of the tables and
+then rebuilds them from scratch okay so
+let's go back to table plus and actually
+this is an important note that you will
+run into specifically with site so if I
+try to hit command R to refresh notice
+I'm not seeing any difference so what I
+have to do in this situation is close
+out and then reopen the connection so
+let's close it out reopen it from
+scratch and now if I come back and
+switch to structure I can see the
+changes there very cool okay so now I
+want to finish up by creating our first
+migration so let's go back to the
+command line and I'm going to say PHP
+Artis make migration and now it'll ask
+me a question what should the migration
+be named keep it very simple just
+describe what you're doing if you're
+creating a table then write create such
+and such table now we actually have
+something a little bit tricky here I
+want to call it jobs right however LL
+already includes a table out of the box
+called jobs so yeah we don't we don't
+want to double up there so we'll need to
+embellish it in some way why don't we
+call
+it job listings table all right and now
+it creates the file in that same
+migration strory if I switch back I can
+find it here so now I see two methods up
+and down up represents applying the the
+operation whatever you want to change or
+add or remove and then down should do
+the inverse so this is do the thing and
+then this one is undo the thing so in
+our case the initial scaffolding is to
+create a table called job listings but
+if we undo the thing then we would drop
+that table entirely um another example
+if you had a migration to add a column
+then here you'd add the column and down
+here you would remove the column and
+that way you can apply the migration or
+roll it back at any given time okay so
+they've given us some initial
+suggestions well your table should have
+a unique ID and it should have some
+default timestamps uh when was this
+record created when was this record last
+updated and those are usually good ideas
+to include all right so go back to job
+and yeah it looks like for each one we
+just need to add a title and a salary so
+let's do that now table string for the
+title of the job listing and then for
+the salary we could actually set this in
+a number of ways uh if we're thinking of
+it as money then we would want to think
+in terms of sents uh that's generally a
+good way to deal with money a foolproof
+way to deal with money in our case
+though we're thinking of salary as
+whatever the employer wants to put they
+could put $500 a month or $50,000 a year
+or something else so I'm going to keep
+that as a simple string uh column
+salary all right that's it so I've
+created a migration class I've defined
+the blueprint for that table now I want
+to run the migration so this time I'm
+not going to run migrate fresh because I
+don't need to reset and start all over I
+just need to apply that newest migration
+so I can run PHP Artisan migrate and
+notice it knows it doesn't need to do
+the other ones it already did those the
+only it hasn't yet done is this one here
+okay so let's come back to table plus
+and maybe hit command R to give it a
+refresh but yeah if I come back here it
+is all right there we go so now I'd like
+to finish up by populating some records
+by switching to the data tab so if I
+switch back to the job file we have
+director programmer and teacher so I'll
+do this very quickly director salary is
+some arbitrary number uh I'm going to
+leave the timestamps at their defaults
+for now I'll do another one
+programmer 60,000 whatever and then one
+for Teacher also uh 50,000 something
+like that so notice they're green that
+means I've created the records but I
+haven't yet committed them to commit
+them you can hit command or control s
+and now that has been
+committed okay recap so we have now
+created a new job listings table and we
+manually populated it with a handful of
+Records so we used a migration class to
+Define the initial structure of that
+table we ran the Migration by running
+PHP Artisan migrate from the command
+line so now things are looking pretty
+good but of course the next step is I
+want to fetch that data from the
+database and then render it in the view
+so how do we do that well I'll show you
+in the next episode Cliffhanger I'll see
+you later
+[Music]
+hi everybody Welcome to day nine of 30
+days to learn larel you're doing great
+and I'm really excited for this one
+because I get to introduce you to
+eloquent uh and eloquent really is one
+of the the pillars of the larl framework
+I really do think you're going to love
+it okay jargon alert uh eloquent is an O
+RM not an O RV not an SUV an O RM and
+this stands for object relational mapper
+um here's how you think of it an O RM
+Maps uh an object in your database like
+a a table row to an object in your PHP
+code so think about it we can go into
+table plus and view the details for a
+single record a row wouldn't it be cool
+if that record just had some kind of
+representation in your PHP code just
+like I can see a comment or a post uh
+within my database what if I just had a
+post object that included all of those
+details well that's sort of what you can
+think of uh when when we reference the
+term om or you might have heard of
+active record this is lel's active
+record implementation and again you're
+going to love it so let's have a
+look okay so return to your editor and
+open up your job class I want to convert
+this into an eloquent model and it's
+really simple but first up this data
+here is Superfluous right it's being
+stored in the database we don't have to
+double up so I will remove that entirely
+just for now okay so all I have to do to
+make a class a PHP class into an
+eloquent model is to extend the model
+class so I can say extends model and you
+want it to be illuminate database
+eloquent model so in my editor that
+automatically gets imported as you see
+here okay but notice immediately when I
+did that we got this red squiggly line
+declaration must be compatible with
+model all so as you can imagine eloquent
+has its own API for how we can query the
+database and part of that API is a
+method called all and also part of that
+API is a method called find so you know
+what we can do yep we're getting rid of
+it all there's no reason to reinvent
+this wheel okay fun so now let's play
+around
+let's go into the routes file and yeah
+within the home route we're just
+temporarily going to try out some
+queries so I will reference our job
+model and notice we have all of these
+methods that we can call due to the fact
+that we extended that model class so
+let's try out job all and let's just see
+what happens is that instantly going to
+give me all of the records from that job
+listings table well let's see we'll try
+to get our jobs and then we will die and
+dump the response okay to the browser
+all right well I do see a collection but
+notice the items are empty so we have an
+empty collection and we know that's not
+right so what's the problem okay well
+here's a key thing to understand larl
+and eloquent uh by extension rely
+heavily on
+conventions so if we if we switch back
+if we have a job eloquent model eloquent
+is going to assume that you have a table
+called
+jobs but if I switch to table
+plus the table isn't called jobs because
+remember we had a little bit of a
+collision there didn't we lell already
+includes one out of the box called jobs
+so we had to tweak ours okay so we have
+two choices to resolve this one would be
+to rename this to job listing and notice
+how the name of the class is the
+singular form of the table so if you had
+uh so if you had a table called comments
+your eloquent model would be comment if
+you had a table called posts then your
+eloquent model would be called post
+right that's an important thing to keep
+in mind so we could do this or uh in
+situations where you want a unique table
+name you can add a protected property
+called table and then here I can assign
+it job
+listings okay so now if I switch back to
+the browser now we have a collection of
+three items and check this out item
+itself is an instance of that new job
+class so now we have a place to tuck any
+any Behavior that's related to a job
+whereas before we didn't have that we
+were just dealing with simple uh scalers
+there was nowhere to put that logic
+except in your routes file which doesn't
+quite make sense most of the time okay
+so if we scroll down you'll see there's
+an attribute section that has
+information about uh the title and the
+salary for this particular uh row if we
+go to the next one this one I believe is
+programmer and then of course the third
+one would be teacher okay so check this
+out if we go back to my routes file if I
+want to grab the first item well we have
+a couple ways to do it so jobs is a
+collection as we've seen and one way
+that we can interact with that
+collection is to treat it as if it were
+an array so that means if I want the
+first job I can just grab the first
+index uh within that array so to speak
+okay so if we come back and we scroll up
+and give it a refresh now I don't have a
+collection I have a single job instance
+that contains these attributes and if I
+want to grab one of these values I just
+reference it directly like this title
+director um
+salary
+$50,000 if I want to grab the next item
+I can just do one and this will be
+$660,000 and the title is programmer
+cool so you see how easy that was we
+were able to uh entirely strip our
+

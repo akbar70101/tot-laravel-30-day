@@ -1,0 +1,382 @@
+little API that we built in that job
+class because eloquent includes it and
+way more uh directly out of the box
+which is really cool so I want to see
+now if I can
+reproduce our list of jobs so right down
+here when the user visits SL jobs we
+fetch them all and then we load a view
+called jobs so I wonder will this just
+work right out of the box I think it
+should so back to the browser click on
+jobs and it just works but now we're no
+longer hardcoding that array okay what
+about a single job yep that one works
+just as before very cool now we're not
+quite ready for forms yet but we're
+going to tackle that very soon but of
+course we can also use eloquent to
+insert or delete records from the
+database so I'll show you a new way that
+we can play around here open up your
+command line then run PHP Artisan Tinker
+think of this as your command line
+playground for your larl app it's a
+great way to get your bearings and try
+things out and see does this work the
+way I expect it to you can create
+variables you can grab them you can
+manipulate things you can make sure like
+I said that when you call this function
+is it returning what you expect let's
+play around and see if that works this
+is a good place to do that so why don't
+we play around with eloquent app models
+job and if I want to create a job we
+call a method create it's all incredibly
+readable so for the values we can
+provide an array here so a job listing
+has a title so I'm just going to say
+Acme director and then a salary is going
+to be one million million dollar and I
+believe those are the only ones we have
+here all right so you call it create
+method you pass an array and you include
+all of the the relevant uh columns that
+your table will require so if we run
+that though we get a mass assignment
+exception uh to be honest I wish this
+didn't happen out of the box because I
+think it is immediately confusing to
+newcomers and it requires a bit of
+knowledge that you may not have yet now
+effectively what's going on here is larl
+is providing some Safety and Security
+out of the box it's saying hey you might
+want to be a little bit careful about
+Mass assigning these attributes all in
+one go and that's that's exactly what we
+did here by the way uh and it's fine if
+you know what you're doing but again
+Lille is just trying to to keep you on
+the straight and narrow so yeah what
+what's the potential danger well in real
+life you will often be responding to a
+form request right so you could have a
+form to update the title of a post the
+user submits that form and you could
+potentially just pass the array of those
+form attributes to this create method
+but you know rule Ru number one when
+dealing with users is you have to assume
+they are malicious and they're trying to
+do something wrong so what if they
+tweaked that form request to also update
+the author ID of the post as well and
+you didn't know that you didn't ask them
+to do that but they snuck it in anyways
+well if you then blindly pass that um
+array of attributes to the create method
+you're no longer updating the title of
+the post like you thought you're also
+updating the author of the post which
+could be catastrophic now imagine in a
+scenario where you're updating the admin
+status for a user uh and and you didn't
+even know you were doing it so this is
+what Lille is protecting against as long
+as you are thoughtful and you know
+exactly what data is being passed to the
+create method it's entirely safe but
+that being said larl by default protects
+you against this and you either have to
+turn off the feature or do what we're
+about to do right now notice after the
+red warning I see add title to the
+fillable property to allow Mass
+assignment on the job class okay so I'll
+show you what that looks like I can
+command click to go to the job class and
+we can add a property called fillable
+this represents all of the attributes
+that are allowed to be Mass assigned so
+for example if I wrote title and uh
+salary this means these two items and
+these two items alone may be Mass
+assigned so if that malicious actor
+tries to update the user ID as well well
+it would be as if they never did it
+because it will be ignored entirely when
+we pass it uh to that create method in
+this example okay so let's come back I'm
+going to hit contrl C to exit out and
+then we will open PHP Aron Tinker one
+more time all right and now rather than
+rewriting this by hand you can usually
+press the up Arrow key to cycle between
+uh your old commands Okay so if I run it
+now it's going to work there we go so it
+creates the record within the database
+table and then it returns to you a new
+job instance that includes all of those
+attributes okay very cool so let's
+inspect all of our jobs job all and we
+should have four items and we do we have
+the initial three that we created and we
+have our fourth one and also notice in
+this case because we're going through
+eloquent it will automatically set these
+default timestamps which is very cool
+all right so we now know the all method
+we know the create method but what about
+that find method that we manually
+created uh in episode or two ago well of
+course we can use that as well I'll show
+you app models job find and we need to
+give it a unique identifier so that's
+why most tables will include some kind
+of unique ID as you see here so if I
+want to find this new one I created I
+could say find seven and that will
+return to me that record from the
+database so keep in mind what's going on
+here it's not magical a SQL query of
+course is still being executed at some
+point behind the scenes but yeah
+sometimes it does feel magical and you
+know what it effectively is Magic uh the
+the eloquent code base is very very very
+very very very very very very very very
+complicated and confusing I don't know
+what I'm seeing when I look at it uh but
+that's the great thing I don't have to
+know what's going on there it just works
+uh so now rather than um memorizing or
+learning how to write these um
+potentially confusing SQL queries
+eloquent uh tucks that away behind a
+nice API I have a method called all to
+fetch all the records I have a method
+called f to find a specific record of
+course I can add conditions like where I
+can add joins um I can do anything I can
+imagine behind this nice clean API all
+right so if I go back to table Plus
+let's give this a refresh and now we see
+our new record so what I'm going to do
+is go ahead and delete these old ones
+and we'll stick with only the ones that
+were generated through eloquent and
+that's fine but now if I switch back if
+I want to delete this job then I could
+simply say job delete whoops forgot the
+dollar sign one more time and notice
+that returns true to indicate it was
+successfully deleted if I switch back
+give it a refresh now it's gone okay so
+um I think we're in pretty good shape
+now you've had your first introduction
+to eloquence the only remaining thing I
+want to show you is that in this example
+we already had a job class that we
+converted into an eloquent model but
+most of the time you will be starting
+from scratch so here's what I want to
+leave you with and this will be your
+homework as well if I run PHP artisan
+make you'll see there are a bunch of
+make commands and you learned in the
+last episode These are used to generate
+uh files so as you can imagine is a make
+model commands now often these will
+accept certain arguments but it's hard
+to know which arguments those are so
+I'll show you a tip if you add help
+before any of these commands it will
+give you help for the command shocker
+all right so now if we scroll up at the
+very top we can see all right we can
+provide the name of the model and then
+we have various options that we can
+include so when we generate a new model
+this is often the the start of A New
+Concept in your application so it's it's
+a great entry point for also
+constructing other things and that's why
+we have these options like- C to also
+create a companion controller for the
+model or a factory or a migration or a
+policy or a cedar you don't know what a
+lot of these are yet but you will soon
+so notice the one at the top- a or-- all
+which is the long form it would generate
+a migration a cedar a factory a policy a
+resource controller and a form re
+in addition to the model so you don't
+necessarily need to do this yet because
+you don't know what half of these are
+but I want you to know that when you
+start working on these these new ideas
+and you add new sections of your site
+you wouldn't start by creating the
+migration you'd probably start by
+creating the model and then the model
+would create the migration as part of uh
+as part of its logic that's something to
+think about okay so out of the box and
+we're not going to keep this if I were
+to say make model comment notice that
+will create a new file within your
+comments directory and you'll see it
+right here and notice it extends model
+it uses this trait uh called has Factory
+we're not quite ready to talk about that
+just yet uh but you can you can leave it
+where it is um with the understanding
+that you'll learn more in the future
+okay let's do another one and again keep
+in mind I'm not going to keep any of
+these I'm going to delete them all at
+the end of the video Let's do make uh
+model post but this time I want to also
+create a migration notice I can add- M
+for short so let's do that now dasm and
+now it creates two files it creates the
+model but also
+corresponding um post table migration
+let's have a look at that post looks
+good and then migrations of course go in
+the database folder and I can see it
+right down here so notice these these
+generators give you a way to quit and
+rapidly um start constructing some of
+these new features which is cool so I
+could say a post consists of a title uh
+it consists of a body but a string is
+too short so that would max out at 255
+characters of our car instead we're
+going to use text because it could be a
+very very long blog post and we want to
+allow for that so yeah you're starting
+to get comfortable right we are
+generating models we've learned about
+options to also generate corresponding
+migrations you learned in the last
+episode you can run phb Artisan migrate
+to commit that migration so that is now
+relevant uh and visible within your
+database so you're making really good
+progress here I hope you're excited and
+yeah this is all just so incredibly
+useful and Powerful I can't stress it
+enough this is the Bedrock of so much of
+the larl code you will write even 20
+years from now okay so your homework is
+yeah work on it get this into your
+fingertips play around you can delete it
+all when you're done generate a variety
+of models uh practice also generating
+the migrations as part of those models
+and then fill out the migration and then
+run PHP Artis migrate to see it in the
+database and then start writing queries
+using uh PHP Artisan Tinker to fetch
+items from that database and then see if
+you can manipulate an item or delete it
+or add a new one that's your job play
+around and get these keystrokes
+uh under your fingertips all right I'll
+see you in day 10 is that right yes
+tomorrow is day 10 so we will next talk
+in day 10 all right see you later in day
+[Music]
+10 all right ladies and gentlemen
+welcome back to day 10 let's get to work
+so today we're focused on the database
+folder now you're already amiliar with
+migrations and that's great but now the
+next stop on your learning is factories
+so have a look at this one that comes
+out of the box user Factory okay so I
+see a definition method and it looks
+like it has various uh database table
+attributes that consist of fake data so
+notice we have name corresponds to any
+kind of fake name and then email
+corresponds to a unique fake email
+address uh a timestamp that can just be
+set to now and then it looks like we
+also have additional methods to to
+configure that that generated user in
+some fashion so if we want a user that's
+in an unverified state it looks like we
+can call this State method where we
+tweak the attributes in some uh shape or
+form okay so what do we use a factory
+for well the answer is many things we
+can use a factory for any situation
+where we quickly need to scaffold or
+generate in this case a user so hm
+imagine you're writing a test and that
+test says well given I have 10 users
+when I da da da then I should ba ba ba
+right well that first step given we have
+10 users we could use a factory to
+quickly generate those uh another
+example would be for simply uh whipping
+up your local uh environment so for
+example in our case we have job listings
+right and if I switch to table plus
+right now we only have one but yeah when
+we're working in our local environment
+it might be useful to have potentially
+50 different job listings and I
+certainly don't want to manually create
+49 more records so again a factory is a
+a good use case for that okay so we have
+a user Factory here how do we use it
+well you can do it anywhere you want
+anywhere you can write layl code uh once
+again though I'm going to reach for PHP
+Artisan
+Tinker now if I want a fake user then I
+need to reference my user class and
+actually on that note let's switch back
+real quick so let's go into app models
+user and yeah remember when we generated
+a eloquent model using PHP artisan make
+model we saw that there was a use has
+Factory trait and I said I think let's
+put a pin in that just for a moment well
+now we're taking the pin out uh has
+Factory adds a number of methods to the
+user class uh for generating factories
+and one of those method is wait for it
+drum roll dot dot dot Factory okay so
+let's play around user Factory create
+create a new Factory for the user class
+this is our API so I'm going to give it
+a run oh but it fails oh yeah I remember
+this okay this is good this is a good
+learning opportunity so we tried to
+generate a new user Factory but it
+noticed that there's no column named
+name even though the factory includes
+one so let's have a look real quick if I
+switch back to user Factory yeah this is
+what comes out of the box but you'll
+remember a number of episodes ago just
+just as an exercise we change name to
+first name and last name so if I switch
+back and and view the structure for a
+user yeah we tweaked this uh any number
+of episodes ago so of course it's
+failing that's expected Behavior okay so
+we could either bring this back to a
+simple name uh column or why don't we
+update this so instead of name I will
+have first name and now you see this
+fake function here uh this makes use of
+an API called Faker and I'll switch back
+here and Faker includes a variety of
+methods for just about any form of fake

@@ -1,0 +1,380 @@
+tag imagine we have our tag object and I
+want to access all of the jobs that are
+associated with this tag then I would do
+something like this right all right so
+we have our method jobs and that too
+will return a belongs to mini
+relationship and we reference the job
+class and that's it cool all right so
+now I want to play around with this
+let's go back uh we have a tag of
+programming do we have any pivot records
+no I will manually add one like so so
+and let's give it a shot I'm going to
+start by opening PHP Artisan Tinker we
+will find that job so app models job it
+had an ID of 10 and now if I want to
+find all of the tags that are associated
+with that job I can run job tags but
+actually as I think of this I wonder if
+we'll see an error oh we do okay this is
+helpful at the very least so no such
+column on the job tag pivot table called
+job ID all right so it's expecting a
+column name of job ID but we know that
+the actual column name is job listing ID
+and that's because lel's assuming a
+default here that usually will work but
+in our case our PHP class is job but the
+corresponding table is job listing so
+yeah in situations like that where you
+have to avoid certain collisions you
+need to be explicit about the column ID
+and here's how we do that come back to
+job and if I command click here you can
+see
+that we have the related model then the
+table name and then the foreign pivot
+key and the related pivot key so let's
+add that here so I'm going to overwrite
+that and I can use a named argument for
+this so I can do the name of that
+argument colon and then not job ID job
+listing ID and that should fix the
+problem okay so boot it back up find our
+job then get the job tags and this time
+it works all right a little bit of a a
+bit of weirdness there again this would
+only be ref relevant in situations where
+your eloquent class doesn't perfectly
+line up with um the relationship or the
+table name something to be aware of and
+also this is going to be true in Reverse
+so if I have a tag and I want the jobs
+well it's going to look again for job ID
+but that's not quite right so in this
+case we don't want the foreign pivot key
+we want the related pivot key so could
+update this as well related pivot key
+would be job listing ID all right so
+let's give that one a shot bring it up
+let's find the Tag app models tag find
+one and now if I want to access all of
+the jobs associated with that tag I
+could say tag jobs okay and now we get a
+collection of one item all right this is
+great but now I want to finish up by
+quickly showing you how you could attach
+new records and it's very simple you you
+could say tag jobs but notice I'm not
+going to access it as a property that
+would give me this collection here and I
+don't want that instead I will call it
+as a method and then run attach I want
+to attach a new record so I will give it
+the ID uh of a new job that I want to
+attach so how about this human resource
+director 7 so I could give it seven or I
+could give it a full call to at models
+job find seven either one of those is
+going to work okay so now if we come
+back to our pivot table we have two
+records great but now here's a little
+gotcha if I were to run tag jobs again I
+still only see a collection of one item
+and this is because this collection has
+already been loaded into memory it's not
+performing a new SQL query so if you
+want to fix that of course you could
+either refetch the the tag from the
+database and start all over or you could
+say tag jobs get just run a brand new
+query and now we get a collection of
+exactly two items so why don't we say uh
+tag jobs get and pluck the title so this
+is just going to grab a single uh field
+or attribute from each of those jobs so
+now we have a brand new collection of
+only the job titles that are associated
+with this particular
+tag hi all right so yeah it's kind of a
+lot depending upon your skill level uh
+if you're already familiar with pivot
+tables and relationships of this sort
+then this is probably a cakewalk but
+otherwise if it's all new to you then it
+might take a minute and that's okay
+watch the video a second time work on
+the homework which is this uh you're
+working on your little blog idea right
+well a post could be associated with any
+number of tags right and now you know
+how to represent that you have a post
+table and you have a tags table the next
+step is to create the intermediate table
+a post tag pivot table so play around
+see if you can get that to work and when
+you feel comfortable and only when you
+feel comfortable move on to day 13 Lucky
+13 I'll see you
+[Music]
+then all right folks welcome to day 13
+today we'll have a look at the n+1
+problem let's review an example so in my
+routes file we have an .4 jobs this
+fetches all jobs from the database and
+then loads a jobs view I can command
+click on that in my Editor to go
+directly to it now if we have a look at
+this in the browser this is what we get
+not the prettiest thing in the world so
+you know what why don't we take 60
+seconds and turn each of these items
+into a card of sorts to start let's swap
+out the unordered list for a simple div
+and then for each card this could be a
+div it could be an article or it could
+even be an anchor tag that way the
+entire card is clickable so why don't we
+try that out I'm going to make the
+anchor tag a block level element and
+then what we'll do is maybe add some
+padding on the left and right uh a
+little bit more on the top and bottom
+and maybe we'll have a border and then
+maybe a color of Border gray 200 maybe
+something like that okay now next we
+don't want blue text so I will delete
+that entirely and I will remove the
+hover styling all right let's see what
+we have so back to the browser give it a
+refresh and yeah that's looking just a
+little bit better the only remaining
+thing might be to make each of them
+rounded and then I want a bit of space
+in between each one so I'll show you a
+little trick on the parent element you
+could do something like space
+y4 and that I'll add just a little bit
+of uh margin in between each of the
+individual items and I think that looks
+fine okay so now notice the entire thing
+is clickable and it takes me to the
+actual job page cool all right so now
+the next step is I'd like to display the
+employer right above the job title here
+so let's do that okay so I will select
+this and why don't we wrap it it could
+be a span I'm just going to do a simple
+div here it's not really a paragraph so
+I wouldn't do that uh maybe there's an
+argument for that though and then above
+it we'll have another div where I Echo
+the job lawyer so there's our belongs to
+relationship and then the name of the
+employer okay let's have a look come
+back give it a refresh all right next
+why don't we add a little emphasis so
+let's make it bold uh I'm going to make
+it blue it's not a link currently but it
+it eventually would be wouldn't it so
+that's okay and at that point it does
+become a link we'll swap that out with
+an anchor tag okay so now for every job
+listing we can see the employer's name
+the job title and the salary it's
+looking pretty good
+okay but now we have introduced a bit of
+a problem and that problem is called the
+n+1 problem okay so what's the issue
+well do you remember an episode or two
+ago where I mentioned that when you
+reference the relationship a new SQL
+query will be performed and I called
+that lazy loading all right well how
+does lazy loading work within the
+context of a loop could we end up in a
+situation where for each item in the
+loop you EX
+another SQL query to load the employer
+uh could that happen and the answer is
+100% yes and that's specifically where
+the name n +1 comes from okay so now I
+want to illustrate this and I'll show
+you two ways to do
+that all right first up larel debug bar
+so you can search for it here's the
+direct URL I'll let you take a look at
+that and yeah it's going to add a
+helpful debug bar to the bottom of your
+browser window and notice it'll have
+tabs from messages or exceptions or your
+views or your database queries that are
+being executed or the models that are
+being loaded it's incredibly helpful
+okay so why don't we install this notice
+I can pull it in through composer and I
+will paste this in okay so you've
+learned at this point that composer is a
+package manager so if I want to pull in
+some kind of a tool or library or helper
+I can simply require it using composer
+and that will pull in all of the
+necessary files it'll pull in the
+package cool okay so we can see that
+larl uses autodiscovery so it doesn't
+require you to manually do anything it
+should just work out of the box as long
+as your app debug setting is set to true
+all right so where would that be it's
+going to be within your environment file
+and that'll be in the root of your
+project right here and notice at the top
+app debug is set to true but of course
+in production it's set to false and that
+way we can ensure that you never display
+a debug bar in a production environment
+okay so let's go back to the browser and
+have a look give it a refresh and there
+you go you instantly have a new debug
+bar all right so I want you to notice
+queries right here 12 SQL queries are
+being performed it seems like a bit much
+doesn't it let's have a look all right
+so we have one for sessions we can
+ignore that but notice we have a query
+to select all from job listings and then
+right down here yeah this is a dead
+ringer for an N plus1 issue if you ever
+see multiple queries that are nearly
+identical other than a particular ID yep
+that's an N plus1 problem so notice
+let's just count these 1 2 3 four five
+six seven eight is that right it
+performed eight queries and if we have a
+look in our database within job listings
+we have three six eight yep eight
+records eight SQL queries or if I had
+100 records then we'd have a 100 SQL
+queries so this is precisely where the n
+plus one problem comes from for every
+single record we will plus one to the
+SQL query count it's a problem it's
+something to be aware of so while lazy
+loading can be helpful if you're not
+thoughtful and aware of what's going on
+sometimes these these performance issues
+can sneak their way in all right let's
+fix this return to your routes file and
+let's extract this into its own variable
+so I could say jobs equal job all okay
+but now I want to tweak this I want to
+implement eager loading I'd like to say
+give me all jobs with the employer for
+each one so I will eager load the
+employer relationship and here's how we
+do that job with and then we reference
+the relationship name and that
+relationship is defined right here so
+that's where I'm getting that value job
+with employer get me all of the results
+okay so keep in mind with get that's
+select star we are grabbing all of the
+records so if you had a million records
+in the database you don't want this
+you'd want to implement some kind of
+limiting or pagination and we'll take a
+look at that soon okay so now if I come
+back to my browser let's give it a
+refresh and it's still going to work
+just like it did before but now if I
+open up our query count it has been
+reduced let's have a look here all right
+so now we only have two relevant queries
+so we have one query to grab all of the
+job listings and then a second query
+that now eager loads all of the
+employers where the ID uh is referenced
+from those job listings so yeah compare
+this to what we had before let's go back
+real quick job
+all refresh yeah before we were lazy
+loading each item within that Loop so
+here's a query for employer 2 employer 3
+employer 5 it'll just keep going on and
+on but when we tweak it to this we are
+now eager loading the employer
+relationship as part of of one single
+query so even if we fetched 100 records
+from the database we would still only
+have two SQL queries and that's what we
+want so you might decide that for your
+own projects even though Lacy loading is
+helpful it might be a bit too risky for
+your preferences so in these situations
+if you want you can disable the feature
+entirely but yeah I want to emphasize
+this point I'm not leading the witness
+I'm not suggesting it is too risky and
+you should disable it I'm just saying
+it's an option if you prefer it and I
+think you should make up your own mind
+on this particular issue uh I find
+developers somewhat split down the
+middle uh certain people disable it at
+the very beginning of the project and
+others feel like they know what they're
+doing they know when they should eer
+load it's not a concern for them so you
+should decide for
+yourself so let's imagine that you do
+want to disable the feature entirely
+this will bring us to a new directory
+app providers and we only have one to
+start app service provider okay so you
+can think of this as a file for
+configuring your application however you
+need to so in our case I want to
+configure my app by disabling uh lazy
+loading all right so we're going to do
+this in the boot method the boot method
+is triggered after all of the project
+dependencies have been fully loaded all
+right so I'm going to reference our
+model right here illuminate database
+eloquent model and yeah this is where
+intellisense is incredibly useful I can
+now say prevent lazy loading and if
+you're working along be careful there's
+also a prevents lazy loading method
+that's not the one you want that returns
+a Boolean in our case we want prevent
+lazy loading all right and that's it so
+now have a look what happens here let's
+go back to my routes file and I'm going
+to return this to a simple job all call
+that leads to Lazy loading within our
+view so if I come back to my browser and
+I refresh it now we get a la loading
+violation exception and this is
+specifically because of that one line
+that we added to app service provider
+and it's really helpful hey you
+attempted to Lacy load the employer
+relationship on the job model and where
+did you do that well you did it in line9
+of your jobs. blade View and yep there
+it is lazy loading okay so if we want to
+remove this screen we have to solve the
+problem so we solve it by eager loading
+the relationship so once again job with
+the relationship name get me the results
+and that's it so we come back give it a
+refresh and we have solved that problem
+okay so now we are eager loading our
+employer relationship we have minimized
+the number of SQL queries I think we're
+in really good shape so in the next
+episode we will move on to day 14 I'll
+see you then
+[Music]

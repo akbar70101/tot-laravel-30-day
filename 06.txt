@@ -1,0 +1,373 @@
+
+not the 5-second explanation is it's a
+way to organize your code right as you
+can imagine the class name job is not
+that unique so for example if I look in
+the entire project and framework for job
+right at the top I see three different
+files that have the name job one of them
+refers to a cued job one of them refers
+to an interface and one of them is our
+job model so as you can imagine without
+some kind of organizational structure in
+place you have collisions just like 20
+years ago when you are organizing your
+downloaded music you didn't put
+everything within a top level folder
+right instead you grouped it according
+to the artist so all Jam miroy songs
+went in a jam miroy directory all uh zzy
+top songs went in a ZZ Top directory it
+was a way of grouping things to avoid
+potential collisions and also just to
+make things easier to reason about okay
+so all you need to know right now is
+larl conforms to an autoloading standard
+called psr4 and that is defined within
+your composer. Jason file and yeah if I
+scroll down you'll see it right here
+autoload psr4 and if this is all just
+gibberish and you're like I have no idea
+what I'm looking at that's okay just
+come along psr4 is a convention and a
+standard for autoloading files and we
+can Define our mapping so to speak right
+here and Lille does this for you
+automatically so Lille is saying right
+here I want an app name space and I want
+that route to be located at this path
+okay so the app name space is located at
+this path from that point onward any
+directories you create are sort of like
+creating a new folder when organizing
+your music so notice how user follows
+that app models is the namespace if we
+go anywhere else how about HTTP
+controllers controller then it will
+follow that namespace app HTTP
+controllers and when we do this we now
+have uh enough sophistication to
+automatically import these files without
+having to uh traditionally require them
+like you might have done 15 years ago
+with PHP okay so all of that to explain
+when I come back to my routes file all I
+have to do here is use it and it's
+instantly available to me I can say use
+app models job just like that okay back
+to the browser click a link and yeah
+everything works again just as it did
+before which is a good thing because now
+we're getting a little bit more
+comfortable we've learned about views
+and now we're dipping our toes into this
+idea of models and extracting data into
+its own class to which we can then apply
+behavior and logic to so for example
+what about right here this section where
+we have a route that listens for a
+specific URI to view a single job when
+we do we fetch all of the jobs and then
+we have this array class that LEL
+provides that finds the first job that
+matches the ID from the URI or the URL
+so this kind of behavior could go in the
+job class couldn't it let's give it a
+shot I'm going to select this whole
+thing here and I will command click on
+job which will take me directly to the
+file and let's add a new method here
+once again it'll be static and I'm going
+to call this find because I want to find
+a specific job with the given ID and
+that ID should be an integer all right
+and then I will paste in that code okay
+so ultimately we will return an array so
+let's import this class illuminate
+support array and then I will add the
+return type to make it clear that we
+expect an array to be returned here okay
+so now notice job all well we're already
+within this job class aren't we so why
+don't we just say static all and that
+would be fine and now we've taken some
+relatively confusing code and we've
+isolated it behind a simple method that
+makes it very clear what it does oh this
+code finds a job with the given ID okay
+so now check this out we'll go back to
+our routes file and I can get rid of
+this confusing logic and just replace it
+with jaw equals job find by the given ID
+notice how much that cleans things up
+too all right let's test our work okay
+so back to the browser give it a refresh
+click link it still works the way you
+did before but now it's even better um
+and that's cool and I think this is
+really cool actually so now remember in
+the last episode we we touched on this
+idea of the happy path and the happy
+path is if everything went according to
+plan this is how it works so what about
+if it didn't go according to plan for
+example what if the user tries to visit
+a job uh with an ID that we don't have
+in our system like 20 well right now we
+get an error right so for the job class
+when we used the find method we expected
+The Returned value to be an array but
+null was returned because there was no
+matching item here so this makes sense
+but also real quick we should talk about
+return types uh if I come back to the
+job class if you did not add this return
+type and types in general are optional
+in PHP but if we did not add this your
+uh error message will be different from
+mine because it will be caught at a
+different point in the script's
+execution so have a look if I remove it
+come back and refresh it still doesn't
+work because within the view we're
+trying to uh interact with it as if it
+were an array but it's not it's null so
+it still fails but it fails at a
+different point and
+whether you enjoy types or not and
+believe me there are world wars when it
+comes to to topics like this uh just
+know that one of the benefits is it will
+it will pick up on potential issues uh
+earlier in the scripts execution and
+generally that's a good thing okay
+anyways come back give it a refresh and
+now we know okay well we have to handle
+the situation where we're trying to find
+a job but one wasn't available and we
+have to handle that in a specific way
+all right let's do that now so we're
+going to try to find the matching job
+however in certain situations job could
+be null so why don't we just check for
+that so if is null or I could just write
+if not job and that will effectively do
+the same thing then we should probably
+abort and display a 404 page 404 uh
+stands for not found it's a browser
+status code and it's exactly what we
+want in this case you're trying to
+access this page but we we don't have
+anything to show you sorry 404 not found
+so with LL we have a helper function
+called abort and we can include a status
+code as the first argument here and by
+the way one thing that I really love
+about LL is how all we have to do is
+call the support function and it will
+then Bubble Up in our system to the
+point that Lille will catch it and
+understand what to do so H we have a 404
+exception here I'm going to translate
+that into the appropriate response and
+you don't have to do anything to make
+that work have a look here if I switch
+back to the browser and we refresh
+notice that this time we do get a 404
+not found page all right so I think that
+about does it for day seven uh real
+quick we're no longer using this class
+so I can remove the import and I think
+we're in pretty good shape here so
+notice we've cleaned up the routes file
+considerably uh we've learned about
+models and we've created our first model
+uh we've learned a bit more about data
+encapsulation and behavior and how to
+handle uh the sad paths or the the
+unexpected paths you've learned about
+custom uh status codes and how they are
+converted into responses automatically
+by larl we really covered quite a bit
+for day seven so no homework for today
+keep playing around with this get
+comfortable and then I think you're
+ready for day eight I'll see you then
+[Music]
+all right day eight welcome back
+everybody so in our job class up until
+this point we have been hardcoding our
+job listings and actually on that note
+if you're just building this for your
+company and at any given time there will
+only be you know two or three jobs
+available and you don't mind manually
+updating this file uh whenever A Change
+Is Made then keep it simple this is fine
+there's nothing wrong with this
+whatsoever however yeah if you're
+building an actual jobs board platform
+that allows people to sign up and and
+create new jobs then this doesn't make
+sense right instead we probably do need
+a dedicated database to to house all of
+our job listings and that's what we're
+going to work on today now you remember
+when we initially installed this
+application uh larel asked us which
+database we wanted to use let me show
+you that
+again LL new testing and it'll ask a
+handful of questions and then it will
+pull in all of the dependencies that
+lell requires through composer and then
+right after this it's going to say all
+right cool what database do you want to
+use so notice by default it chooses sqte
+which is a file-based database that
+actually kind of gets a bad W sometimes
+uh it turns out you can use this in I
+would almost say the majority of
+situations if you're Google you probably
+can't do it you know if you're Amazon
+you can't do it but if you're just a
+reason ably uh sized business and and
+you don't have database rows going into
+the millions and millions and millions
+then you might be okay at least
+initially so that's why larl chooses it
+as a sensible default but yeah otherwise
+if you prefer my SQL or MySQL uh then
+you can select the one you want so
+here's what I want to show you I'm going
+to cancel out of here uh with control C
+because we don't need it but if I switch
+back to PHP storm and I go into my
+environment file that database choice is
+determined here so your EnV file is
+where you configure all of the various
+uh preferences and passwords and and
+strings uh for your project so notice it
+includes such configuration as what
+database do I want to use um is my
+application currently in a debug State
+well if I'm working locally the answer
+is yes when I push it to production the
+answer will be no or false um what else
+do we have here what session driver do
+we want to use what Cash Store do we
+want to use uh if I'm connecting to some
+kind of API as part of my project maybe
+there will be an API key that I store
+here and I can add my own so I could
+write some app API key and then I paste
+in whatever string they provide me and
+then I can reference that safely
+throughout my entire Project without
+worrying about very sensitive uh codes
+or passwords or sequences being shared
+potentially through GitHub and things
+like that so this is important and we're
+going to talk about it more in the
+future but for now I just want to point
+your attention to the fact that if you
+want to figure out what your default
+database connection is you can visit
+this file or you can run an Artis
+command to view it so let's go to the
+terminal I will visit my example project
+that we're currently working on and yeah
+we touched on this just briefly Lille
+ships with a tool called artisan and
+when I run this you'll see a variety of
+commands that you can run a huge variety
+but again like everything you're
+probably in most most situations not
+going to run 90% of these you'll find a
+handful that you reach for and then
+every once in a while you'll reach for a
+different one okay however if we come up
+you'll see they are sorted according to
+a nam space so we have an off name space
+a cach name space uh you'll find a make
+name space uh this Nam space is for
+creating or generating files so if you
+want to quickly generate a class or an
+event or a Factory or job and you'll
+learn all about this uh later in the
+course you would use the make name space
+but yeah if I scroll back up notice
+within the DB namespace there's a
+command called show display information
+about the given database all right so
+let's have a look at that now PHP
+Artisan DB show all right and now we
+have a quick UI into our default
+database I can see it uses SQ the path
+to that file is here and then here are
+the various table that are included at
+the moment now here's a key thing to
+understand when we initially ran that LL
+new command one of the steps in that
+chain was to run your migration and
+build up the database and corresponding
+tables so I say that because if you're
+wondering wait a minute we're just
+learning about databases in this video
+and yet all of these tables have already
+been created how come well that's why
+now I also say this because if you
+created a ll app without using the LL
+new command you will need to run this
+manually and you can do that by saying
+PHP Artisan migrate and I'll show you an
+example of that let's go back to PHP
+storm and you'll remember from up here
+the path to the database is right here
+so we can check that go into database
+database.sql however what if I delete
+this and then we start again okay PHP
+Artisan migrate and let's put a pen in
+that word migrate just for now we're
+going to talk about that more shortly
+but if I run it it's going to say all
+right you're using sqi fine but I don't
+yet see a database do you want me to
+create it yes so now it creates it and
+it runs all of your migrations to build
+up the necessary tables uh that LL
+thinks you want as well as the tables
+that the framework itself will require
+okay so now if I switch back to PHP
+storm it manually creates that file now
+your next question of course is okay
+cool but how do I connect to the
+database how do I see the tables how do
+I inspect all of the rows within each
+table and the answer is of course you
+got to connect to it in some way uh you
+could do it directly through the command
+line if you're comfortable with that or
+I would recommend using a dedicated guey
+uh for your OS of choice so here's what
+I recommend so visit table
+plus.com uh at least at the time of this
+recording it is Far and Away the best
+database management guey I've ever come
+across it's a free download and there
+are versions for Mac windows and Linux
+so everyone should be happy and all on
+the same page I'd highly recommend it so
+give it a download and open it up when
+you're ready now once you open it you'll
+see a screen somewhat similar to this
+maybe minus the the layer cast
+connections let's create a new one at
+the top and one cool thing about table
+plus is they support all of the various
+uh connections so MySQL or postgress or
+sqlite or even reddis uh everything will
+work let's click on this one here and
+yeah it wants us to know what's the name
+we're going to call this our example
+database and next it wants a path to

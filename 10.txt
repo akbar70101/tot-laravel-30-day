@@ -1,0 +1,372 @@
+method here called employer so if I have
+a job and I need information about the
+employer then the method will be called
+employer and this is going to return a
+relationship type now in this case I've
+said multiple times a job listing
+belongs to an employer so belongs to is
+our key word there return this belongs
+to and now I want to reference the class
+that it belongs to in this case
+employer so yeah as you can imagine
+there are multiple relationship types a
+job belongs to an employer but in
+Reverse does an employer belong to a job
+no that doesn't make sense an employer
+can have many jobs so that relationship
+type is called has many and then there's
+a variety there's a half dozen there's
+has many there's has one there's belongs
+to there's belongs to many um and then
+there's some more complicated options
+that we're not going to worry about
+right now all right so this is all we
+have to do here check this out PHP AR
+Tinker I want to find any job so let's
+say app models job and rather than
+calling the find method and providing an
+ID if you ever just want the first one
+that comes up I can use a method called
+first all right so we have forested
+firefighter now because I have that
+relationship defined in my eloquent
+model I can call employer but notice
+real quick this can be initially
+confusing I know it's a method but I'm
+not going to call it as a method I'm
+going to call it as as a property just
+like I'm referencing the title or the
+salary for the job and when I reference
+it as a property Lille is smart enough
+to pick up on that and it will know okay
+well we don't have an employer property
+on this model so what you're probably
+trying to do is access the employer
+relationship all right so if we give
+this a run now notice we're no longer in
+a job instance we have an employer
+instance okay so that means what I can
+do here is say job employer and now I
+can access any of the attributes from my
+employer and in this case we just have
+name pretty cool right so even cooler
+though think about what's happening here
+let's do it one more time all right so
+this is effectively running a query like
+select star from jobs limit one so yeah
+notice we're only focused on the job
+listings table it hasn't yet referenced
+the employer table so here's a key to
+understand at the point where I say job
+employer a second SQL query is being
+performed and we refer to this as lazy
+loading so lazy as in the loading and
+the query is not being executed until
+the last possible minute and the last
+possible minute is when you request it
+so here is where a new SQL query would
+be executed and yeah it would be
+something like uh select star from
+employers where I D equals 2 in this
+example and that's why we have that
+foreign ID there so that we can point to
+a specific employer all right that's a
+key thing to understand but now what
+about in Reverse so if I have an
+employer at models's employer and again
+I'm just going to grab the first one
+here uh it would be nice to grab all of
+the jobs that the employer has uh
+published so what method would we access
+here well something like jobs right so
+it sounds like we need a method on the
+employer class called jobs let's do that
+now employer and I'll create a new one
+here jobs and yeah this time what is the
+relationship well just work it out in
+your head what's the relationship
+between an employer and a job well an
+employer can sign up and create many
+jobs so an employer has many jobs has
+many
+job and that's it so now think about it
+if we have our employer object and we
+call jobs well that's going to return a
+collection right because it could be one
+or many jobs that are associated with
+the employer so you'll see that
+reflected here let's contrl C bring it
+back up all right I'll press up find the
+first employer and now if I say employer
+jobs all right and yeah notice we get a
+collection of items so an eloquent
+collection for now just think of it as
+an array on steroids you can still Loop
+over it like like any normal array but
+it also includes a full API and a number
+of methods to to make the process of
+filtering uh inspecting uh looping any
+of that stuff will become infinitely
+easier because it's all wrapped up
+within this collection instance all
+right so within the collection we have
+our items all of the items and in this
+case there's only one because this
+employer only has a single job so if I
+wanted to act
+that first job again I can just interact
+with it like an array or like a
+collection and one of the methods on a
+collection is
+first okay and I think we're going to
+stop right there for day 11 uh so you
+wouldn't believe this but these two
+relationship types alone has many and
+belongs to they're going to take you so
+far it'll take you 85% of the way there
+and yeah keep in mind there are more
+relationship types uh there is a belongs
+to many relationship which is great for
+pivot tables and then there are
+polymorphic relationships which are a
+good bit more complicated but yeah these
+two that we discussed they're going to
+take you so far you won't believe it
+okay so your homework is get this into
+your fingertips get it into muscle
+memory play around delete the code when
+you're done use the example of a Blog
+because we all immediately understand it
+uh what's the relationship between a
+post and a comment well a post can have
+many comments so that method you'd
+create is a has many relationship uh
+what about the relationship between a
+comment and a post well the comment
+belongs to the post what about the
+relationship between a post and a user
+well a post is written by a user so the
+post belongs to the user or an author
+what's the relationship between a post
+and tags well this is kind of a a
+cliffhanger a post can have many tags
+but in reverse each tag does not belong
+to a post so why don't you hold off on
+that Tag's example because it requires a
+new relationship type that we didn't
+talk about in this episode we will cover
+that naturally in day 12 I'll see you
+[Music]
+then okay so for day 12 I want to create
+a connection between a job and any
+number of tags so if you've done this
+before you probably know well we'll
+probably have to create some kind of
+pivot table but yeah then how do we
+represent that relationship within our
+code well the answer is to use a belongs
+to mini relationship and I'll show you
+that
+today now Why Don't We Begin by creating
+our tag model phb artisan make model tag
+and this time I also want a migration
+and a factory cool so now we have the
+model the factory and the migration okay
+so yeah why don't we start within the
+migration file now what does a tag
+consist of well at least initially a
+name should be fine okay so think about
+it we have a jobs table we have a tags
+table but then we need something in
+between right a connecting table and
+this is our pivot table so think about
+it within this table I could store the
+tag ID as well as the job ID so I could
+say all right the job with an ID of one
+uh is associated with the tag with an ID
+of one all right new row the job with an
+IDE of one is also associated with the
+tag with an ID of four next one the job
+with an IDE of seven is associated with
+a tag with an ID of nine right you get
+the idea it's a standard Fair pivot
+table okay so let's create that now uh
+you have two choices so I could create a
+brand new migration but keep in mind
+there's no hard rule that a migration
+class can only ever contain one schema
+create call so for example if I just
+wanted to group these together so I
+could have our tags creation as well as
+our job tag uh table that would be fine
+as well uh and I think you'll find you
+you'll do both it sort of depends on the
+order that you create these things so
+for example if you were to add the pivot
+table a month from now it would be
+within its own migration but if you're
+doing it all at once this is fine you
+could group them inside the same file
+something to keep in mind okay cool so
+what should our pivot table consist of
+well mostly foreign IDs right so I'll
+show you we can do table forign ID for a
+job so this is going to handle our job
+uh ID column next we're going to need
+another one for our tag ID so I can say
+foreign ID for tag now in terms of
+timestamps uh this is mostly a
+preference uh you have to decide when
+you create a new record in this pivot
+table would like to track uh the the Tim
+stamp for when that happened sometimes
+that's important other times it can be
+omitted it just depends but we will add
+it in this case now I'm about ready to
+run this but real quick a little gotcha
+so when we run foreign ID for job that's
+going to prepare a job ID foreign key
+but we have to be careful because we
+want job ID to point to our job listings
+table rather than that jobs table that
+larell includes out of the box so if I
+command click on the method you'll see
+that I can override the column name and
+that's what I'm going to do here so I
+will call it job listing ID and that's a
+little more appropriate okay let's give
+it a run and run it PHP Artisan migrate
+all right so if we come back and refresh
+here's our tags table and here is our
+job tag pivot table now on that note
+keep in mind the naming convention here
+we take the singular form of each of the
+connecting tables and then we sort them
+in alphabetical order and separate them
+with an underscore so jobs and tags
+become job tag and that's fine okay so
+now let's talk about constraints so if I
+were to manually add a tag here we'll
+call it
+programming and let's go into jobs let's
+say how about the job with an ID of 10
+okay job with an ID of 10 is associated
+with the tag with an idea of one right
+this is fine however what if I were to
+delete that tag
+like so well if I come back give it a
+refresh it still lives so now we have an
+orphan don't we we have a record that
+points to a tag that does not exist in
+our system and yeah we don't want to
+allow for that so this is where we can
+add a foreign constraint and this is
+especially important because SQ light
+defaults are a little bit different from
+MySQL so this will be a good exercise
+all right I'm going to switch back and
+for my job listing ID I'm going to add a
+call to constraint so create a
+constraint and then a second one to
+Cascade on delete and then I'll do the
+exact same thing for tag ID okay so what
+this says is create a constraint and
+then if that referencing record happens
+to be deleted I want you to Cascade and
+delete this pivot record as well and the
+same is true for tag so if we have a a
+job ID of one and a tag with an ID of
+one but then the tag with an ID of one
+is deleted it will Cascade and also
+delete the pivot record as well okay so
+I want to roll this back and run it
+again but notice drop if exists only
+deletes the tags table so we need
+another one here for job
+tag okay let's give it a run PHP artisen
+migrate roll back and PHP Artisan
+migrate we'll do it all in one go cool
+okay so now yeah let's manually create
+another
+tag and then we'll say within job tag
+the job with an ID of 10 has a tag with
+an ID of one and we'll give that a save
+and we can see the constraint is in
+place because we see these little arrows
+here connecting them so I can click it
+and it'll take me directly to that
+record further within job tag if I go to
+structure notice I can see the foreign
+key right here okay but we still have a
+problem again this comes back to sq
+light defaults if I were to return to
+tags and delete this record
+it lets me and if I come back to job tag
+oh it's still there so what was the
+point we added the constraint but it
+didn't constrain anything uh what's the
+problem yeah this is a common thing that
+people run into so it's good to know
+okay so the defaults for SQ light
+specify that constraints are not
+enforced but in your larl app they are
+enforced but yeah keep in mind we're not
+in our Lille app right now are we we're
+just accessing our database directly so
+we are bound by the defaults of SQ light
+rather than the defaults of larabel okay
+so that means if we're directly within
+our database gooey and we want these
+constraints to take effect we need to
+manually turn it on but in our laral app
+we can ignore it they are turned on by
+default and of course if you want to
+reverse that and turn them off you can
+within your environment file
+okay let's go to the SQL Tab and I will
+run pragma foreign Keys equals on all
+right turn on foreign constraints okay
+so now if we come back to tags let's
+read that one all right we should still
+have our pivot record but this time if I
+were to delete the tag it will Cascade
+and also delete the uh excuse me also
+delete the corresponding pivot record as
+well that's good and of course the same
+would be true if we deleted the uh
+referencing job okay very cool
+so now I want to see this in our PHP
+code because that's what we most care
+about okay so let's set up the
+relationship we now have a model for job
+and tag but no relationship between the
+two okay let's start within the job so
+if I have a job and I want to access all
+of the tags for that job then our method
+would be called Tags and again if you
+can't remember what to call that just
+imagine you have a job object and you
+want to access something well ideally
+what would you call you would do
+something like that so there's your
+method name okay so our relationship is
+not a has manyi it's not a belongs to it
+is a belongs to many relationship so it
+belongs to but it also can have many and
+this makes perfect sense when you think
+about it so does the
+tag uh called programming does this
+belong to how about the job with an ID
+of 10 well yes but it doesn't
+exclusively belong to it many many jobs
+can be associated with this tag so yeah
+we don't have a belongs to relationship
+it's almost like a belongs to and has
+many relationship and yeah we represent
+that with this one right here belongs to
+many okay so let's reference the
+corresponding tag class and then I also
+want to do it in reverse now what's cool
+is when it comes to belongs to many
+relationships it's the exact same code
+on both ends so for example if I go to

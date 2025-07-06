@@ -1,0 +1,372 @@
+data you can imagine and what's cool
+about apis like this is you can just
+guess what it is so for example if I
+want a fake name there's probably a a
+method called first name and there it is
+I didn't even know that was one but
+there is right that's the cool thing
+about apis like this so with that in
+mind is there a last name method yes
+there is so I can update this as well
+okay so uh we're going to give it one
+more try but take a look at this if I
+press the up Arrow key and I run it
+again it still fails and this is an
+important thing to remember uh when you
+run PHP Artis Tinker all of that code is
+loaded into memory so when we make
+changes well we have to exit out and
+then restart so I can press control+ C
+to uh exit out and then I will bring it
+back up all right and now once again I
+can press up to cycle to my last command
+run it and this time it works okay so
+notice it creates a new record within
+the users table and it returns to us a
+new instance of that user so if I come
+back and switch to users let's go to
+data sure enough we have a new record of
+fake data okay but what about situations
+where I want many records well we can do
+this you user Factory and as the first
+argument to this Factory function we can
+provide a number so let's create just to
+illustrate this let's create a hundred
+fake users all right that's done it's
+very quick give it a refresh and yeah
+now you can start to see the power of
+this so when you are working in your
+local environment and you're playing
+around with some things and you want a
+bunch of different uh job listings well
+you could use a factory to quickly
+scaffold them so let's do that now if I
+switch back yeah the moment we only have
+a single user Factory uh and of course I
+could duplicate this and rename it to
+job listing Factory but yeah situations
+like this always reach for a generator
+so contrl C PHP artisan make Factory and
+yeah don't forget if you're confused
+about what argument to pass you can
+proceed it with help and I can see all
+right let's include the name of the
+Factory and then optionally I can
+include the name of the corresponding
+eloquent model all right beb artisan
+make Factory um job Factory all right
+let's give that a run and now we have a
+factory for a job all right so what
+about the attributes here well it looks
+like we have a title and a salary all
+right so let's do a title and this is a
+job title so I believe the faker library
+has a method called job title and it
+does great next salary um what could we
+do here we could do a fake number of
+sorts um or or remember it doesn't have
+to be random so in situations where it
+just doesn't matter whatsoever then feel
+free to hardcode a value like if if this
+is if this is fine and will suit your
+needs then you can do that uh but if you
+want a variety of salaries for filtering
+or something like that then you would
+want to make it Dynamic so it just
+depends uh on what your needs are all
+right and I think that should do it so
+let's give it another shot PHP Artisan
+Tinker app models job Factory create so
+again notice how all we had to do is
+create the corresponding Factory and
+larel smart enough to figure out what
+that mapping will likely be give it a
+run o we get called to undefined method
+job Factory okay let's scroll up and I
+think I know why yeah so remember this
+particular class we created manually
+because a number of episodes ago we
+already had a plain old job class to
+work with but I want you to notice the
+difference here if I switch to user it
+uses this has Factory traits and yeah we
+saw this a couple episodes ago if we
+make any old uh model make model post
+that uh the generator will include this
+trait here but again because we manually
+created the job class we haven't done
+that yet okay so let's delete this and
+manually add it on we're going to use
+has Factory and notice that long path
+there so ideally make sure you're using
+some kind kind of IDE or editor that has
+autoc completion use has
+Factory yeah you have to pull in this
+trade because the trait is what affords
+us that factory method call all right
+sorry about that let's do it one more
+time HP Artis Tinker up create a factory
+for a job and there we go this time we
+have a data processing equipment
+repairer that sounds like an exciting
+job and there we go all right once again
+let's do a bunch let's do uh
+300 random fake jobs and again notice
+how quick that is give it a refresh and
+there you go we got musician physicist
+Warehouse geological data technician uh
+it's pretty cool actually when you think
+of it now what about if I switch back to
+user you'll remember excuse me let's go
+into user Factory okay so you'll
+remember there's an additional method
+called unverified and it looks like if
+we want a user in an unverified state
+that would mean email verified ad is set
+to null but notice by default up here
+it's just set to now so if we switch
+back all of these users where is it will
+have uh the email verified at uh
+timestamp set okay so how do we activate
+uh this particular State and that would
+be the term by the way that we use State
+well like this app models user Factory
+and then we call the State method which
+is
+unverified
+create and that's it so notice email
+verified that is set to null so yeah
+you're not going to reach for this all
+the time but trust me once you start
+building um more substantial projects
+you'll run into situations like this
+where yeah you need to create a model or
+a record that's in a very particular
+States uh usually for the purposes of
+performing a test so I'll let you take a
+look at this notice you create a method
+uh give it any name you want and then
+within that method you call a State
+method on the object where you pass it a
+closure a function that returns an array
+okay so you can create these yourself as
+well for example often um we'll just do
+this as a quick exercise often for
+simple projects your user table might
+have an admin status and let's say by
+default uh it's set to false you're not
+an admin yeah maybe in certain situ s
+you want to say well given I have a user
+who is an administrator when I bada bing
+bada boom then I should ZIP zap zap
+right uh so yeah that would be a good
+use case for a state so I could just
+copy what I have here and say okay well
+this one this state will be called admin
+and this will set the admin status to
+true all right and that's it now you
+have a new piece of state so you would
+say user Factory atmin create and now
+that will use all all of this data but
+then it's effectively going to grab
+these attributes and merge them and
+override uh the defaults and that would
+be one way to deal with this
+lovely now keep in mind in the next
+episode we're going to have a full
+lesson around eloquent relationships but
+I kind of want to scratch the surface
+just a little bit to finish up this
+video and you'll see why in just a
+minute now it makes sense that any given
+job on our site would course respond or
+have a relationship to a given employer
+so you can imagine if if we're really
+popular and Microsoft signs up then
+Microsoft could have a hundred different
+uh job listings and we want that
+relationship to exist okay so let's do
+this I'm going to go into my migrations
+folder to our job listings table and now
+I'm going to say well a job listing
+belongs to an employer so we probably
+want some kind of foreign ID called I
+don't know employer ID that would make
+sense so for every single job listing
+there's an employer ID column that
+points to the corresponding employer uh
+but right now I don't have an employer's
+table so that's the next step let's do
+that real quick PHP artisan make now we
+could do migration but like we learned
+at the end of the last episode we could
+also start with the model which would be
+employer and then I could say also
+generate a migration as part of that so
+let's give that a run and now we have
+two new files our employer eloquent
+model and the create employers table
+migration cool so let's have a look at
+that right here so an employer will have
+a name and yeah maybe at least for a
+demo maybe that's enough to get us up
+and running cool so if we switch back to
+our job listings table now check this
+out I could say uh well I could say
+unsigned
+big integer employer ID so why are we
+doing unsigned big integer well that's
+because whenever you call this IND
+method within a migration that's
+actually creating a big integer column
+let's see if we can find it yeah so it's
+creating a big integer that
+automatically increments so when you
+generate your foreign Keys you want to
+make sure that the type of the foreign
+key is identical so that's why I'm also
+using an unsigned big integer however
+another option is to use this table
+forign
+id4 and notice right here the the
+argument it expects is an eloquent model
+so I could say well follow a convention
+and create the necessary foreign ID for
+an
+employer and that would be another way
+to do it all right so let's give this a
+shot now because we've made some changes
+and we're so early in the project I will
+often uh run migrate fresh just drop
+everything and and run it from scratch
+all right so now we've built up all of
+our tables uh from the beginning okay so
+if we come back give it a refresh of
+course we've lost all of our seed data
+and that's fine but if we have a look at
+job listings we now have an employer ID
+a title and a salary and the employer ID
+refers to this new employer
+table all right so now if we go back to
+our job Factory this is no longer enough
+and in fact if we try it out um where
+are we there we go let's try to create
+300 jobs it doesn't work because of
+course employer ID was not provided so
+we need to update our Factory so
+employer ID but yeah what do we set this
+to uh do we hardcode it well if that's
+fine for your needs then great have at
+it it'll be the quickest option but yeah
+usually it would be helpful to say well
+whenever you generate a job as part of
+that I also want you to generate any uh
+corresponding relationships like an
+employer so we can do that by saying
+employer Factory just like this so now
+when larell comes to this it'll know
+okay we also need an employer Factory so
+I will generate that persisted in the
+database and then use that unique ID as
+the corresponding employer ID okay but
+now this isn't going to work either
+right let's give it another shot
+pachon Tinker run it again and it still
+fails employer Factory not found all
+right let's see what the problem is we
+come back up we now have an employer
+model it is using the trait but there's
+no corresponding uh employer Factory
+okay so let's have a look at this if I
+run phb Artis help make
+model yes we know that we can use- M to
+create the migration but check this out
+we can also pass DF to generate a
+factory as well so here's what I'll do
+I'm going to delete this just so we can
+do it
+together PHP artisan make model I'm not
+going to do dashn this time because we
+already had the migration but I will say
+uh employer dasf and now we get the
+model and the factory cool so here's our
+new employer Factory and like I said all
+we have right now is a name so I could
+do a fake um maybe is there a business
+no company yeah company let's do a fake
+company name all right so are we on the
+same page now when I want to generate a
+new job it'll create a fake job title uh
+it'll hardcode a salary and then for the
+corresponding employer it'll reference
+an employer Factory so larl will read
+that it will then generate a new
+employer record and that will have a
+unique ID right and that ID will be
+substituted as the employer ID here all
+right let's give it a shot PHP Artisan
+Tinker press up and this time I'm going
+to generate how about 10 jobs all right
+and it works all right let's have a look
+in our database so I exited out and I'm
+going to reopen it again when you're
+using SQ lights sometimes you should do
+that when you drop the database entirely
+and build it up from scratch uh if you
+ever have a situation where your table
+is not reflecting the change you made
+it's probably related to that all right
+so here are the job listing we have
+forest fire fighter landscape artist
+manager a pipe fitter and each of those
+uh belongs to a corresponding employer
+so let's see the forest firefighter
+belongs to the employer with an idea to
+and it looks like that one is whatever
+whatever this is these all look like
+confusing Law Firm names uh but but
+that's that's entirely fine and again I
+want you to notice how each of these job
+listings belongs to its own employer now
+there will be situations where you want
+multiple job listings to belong to the
+same employer and for that you can use a
+method called recycle uh we're not going
+to get into that right now but if you
+want if you want some extra credit you
+could have a look at that but yeah
+otherwise I think I think that's going
+to do it uh for this
+episode all right so model factories
+you've learned that they are excellent
+for scaffolding data for your local
+environment and also for the purposes of
+preparing a a test now we wrapped up by
+learning just a little bit about
+database relationships we set it up so
+that a job listing belongs to a
+corresponding employer and we got that
+to work on the database end but what
+about the eloquent end so if I do have a
+job object how do I then fetch the name
+of the employer who created that listing
+Well that's going to be the subject of
+day 11 I'll see you then bye
+[Music]
+welcome to day 11 the topic of
+conversation is eloquent relationships
+which trust me you're really going to
+love all right let's get going so we
+discussed in the last episode that there
+should be a relationship between a job
+listing and a corresponding employer so
+a job Bel bels to an employer might be
+the terminology we'd use okay so if I
+had a job object yes I can access the
+title or the salary but what about
+information around the employer well
+right now we can't do that we've defined
+that structure on the database end but
+in our PHP code it just doesn't exist so
+let's make it exist and luckily eloquent
+has our back I'm going to create a
