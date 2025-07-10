@@ -452,12 +452,15 @@ $job->delete(); // خروجی: true (موفق) یا false (ناموفق)
 $user = App\Models\User::with('jobs')->first();
 echo $user->jobs->count(); // خروجی: تعداد job های این user
 
+
 // 7. تست کردن helper functions
 echo bcrypt('password'); // خروجی: رمز عبور hash شده
 
 // 8. کار با Collections
 $collection = collect([1, 2, 3, 4, 5]);
 echo $collection->sum(); // خروجی: 15
+
+
 
 // خروج از Tinker
 exit;
