@@ -4528,6 +4528,9 @@ great it works so now think about this
 if I were to run PHP Artisan migrate
 fresh well we've learned that drops all
 of the tables and builds them up from
+
+375///////////////////////////////////part12-end
+
 scratch but then as a result we lose all
 of our seated data but check this out if
 I run it again but I add the help
